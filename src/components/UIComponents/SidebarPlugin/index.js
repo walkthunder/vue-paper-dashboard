@@ -37,6 +37,11 @@ const SidebarStore = {
       name: 'Notifications',
       icon: 'ti-bell',
       path: '/admin/notifications'
+    },
+    {
+      name: 'Login',
+      icon: 'ti-user',
+      path: '/admin/login'
     }
   ],
   displaySidebar (value) {

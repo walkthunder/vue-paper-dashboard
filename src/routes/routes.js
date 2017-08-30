@@ -10,6 +10,7 @@ import Icons from 'src/components/Dashboard/Views/Icons.vue'
 import Maps from 'src/components/Dashboard/Views/Maps.vue'
 import Typography from 'src/components/Dashboard/Views/Typography.vue'
 import TableList from 'src/components/Dashboard/Views/TableList.vue'
+import Login from 'src/components/Dashboard/Views/Login.vue'
 
 const routes = [
   {
@@ -56,6 +57,11 @@ const routes = [
         path: 'table-list',
         name: 'table-list',
         component: TableList
+      },
+      {
+        path: 'login',
+        name: 'login',
+        component: Login
       }
     ]
   },
