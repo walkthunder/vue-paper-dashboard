@@ -14,12 +14,21 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
     "chartist": "^0.10.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.1",
-    "vue-clickaway": "^2.1.0",
+    "http": "0.0.0",
+    "jsonwebtoken": "^7.4.3",
+    "node-uuid": "^1.4.8",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0",
+    "request": "^2.81.0",
     "vue": "^2.3.0",
-    "vue-router": "^2.2.0"
+    "vue-clickaway": "^2.1.0",
+    "vue-router": "^2.2.0",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
