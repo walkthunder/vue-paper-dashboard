@@ -1,25 +1,28 @@
 <template>
-  <div class="card login-card">
-    <div class="header">
-      <h4 class="title">Admin Login</h4>
-    </div>
-    <input placeholder="username"
-           class="input"
-           id="username"
-           type="text"
-           label="Username"
-           v-model="user.username" />
-    <input placeholder="code"
-           class="input"
-           type="password"
-           label="Password"
-           v-model="user.password" />
-    <button id="btn" type="submit" @click.prevent="verifyId">登录</button>
+  <div class="login">
+    <img class="background" src="//pic.qingting.fm/goods/2016/12/11/f6839dd1fb23e4878d823660fcbd42de.jpg" alt="">
+    <el-card label-position="left" class="box-card" id="login-card">
+      <div slot="header">
+        CMS内容管理系统
+      </div>
+      <el-form :model="user" label-position="left" label-width="80px">
+        <el-form-item label="用户名">
+          <el-input v-model="user.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input type="password" @keyup.enter.native="onSubmit" v-model="user.password"></el-input>
+        </el-form-item>
+        <el-form-item style="text-align:center" id="btn">
+          <el-button type="primary" @click="onSubmit">登录</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 <script>
   import request from 'superagent'
   import cache from '../../../service/cache'
+  import { BACKEND_HOST } from '../../../config'
   export default {
     data () {
       return {
@@ -29,25 +32,43 @@
         }
       }
     },
+    created () {
+      if (cache.getItem('token')) {
+        this.$router.push({name: 'overview'})
+      }
+    },
     methods: {
-      verifyId () {
+      onSubmit () {
+        if (!this.user.username) {
+          this.$message.error('用户名未填写')
+          return
+        }
+        if (!this.user.password) {
+          this.$message.error('密码未填写')
+          return
+        }
         console.log('verify user method start', this.user)
         if (!this.user) {
           console.error('No data input')
           return null
         }
         request
-          .get('/api/jwt')
+          .get(`${BACKEND_HOST}/api/jwt`)
           .query(this.user)
           .end((err, res) => {
             // Redirect to dashboard if succeeded
             if (err) {
               console.error(err)
+              this.$message.error(res.error)
             }
             console.log(res)
             if (res.ok) {
               console.log(res.body)
               cache.setItem('token', 'admin')
+              this.$message({
+                message: '登录成功',
+                type: 'success'
+              })
               this.$router.push('/')
             }
           })
@@ -56,25 +77,27 @@
   }
 </script>
 <style>
-  .login-card {
-    position: absolute;
-    top: 300px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    text-align: center;
-    width: 300px;
+  .login {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
   }
-  .input {
-    display: block;
-    outline: none;
-    padding: 2px;
-    margin: 0 auto;
-    width: 250px;
-    margin-top: 20px;
+  .background {
+    position: fixed;
+    left: 0;
+    top: 0px;
+    right: 0;
+    z-index: -1;
   }
-
-  #btn {
-    margin-top: 20px;
+  #btn > div {
+    margin-left: 0 !important;
+  }
+  #login-card {
+    width: 400px;
+    margin: 80px auto;
+    padding: 0px 10px;
   }
 </style>

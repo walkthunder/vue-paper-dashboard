@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 
 // Plugins
 import GlobalComponents from './globalComponents'
@@ -21,6 +23,7 @@ import 'es6-promise/auto'
 
 // plugin setup
 Vue.use(VueRouter)
+Vue.use(ElementUI)
 Vue.use(GlobalComponents)
 Vue.use(GlobalDirectives)
 Vue.use(Notifications)
