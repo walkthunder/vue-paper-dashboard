@@ -2983,9 +2983,7 @@
   padding: 2px;
   margin: 0 auto;
   width: 250px;
-}
-#username {
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 #btn {
   margin-top: 20px;
@@ -12776,4 +12774,4 @@ textarea.form-control {
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch; } }
 
-/*# sourceMappingURL=app.875ea4bc2eab1ad49421a713071fa7ed.css.map*/
+/*# sourceMappingURL=app.9fc5df9d78e6a8754d9dce5b74e11eff.css.map*/

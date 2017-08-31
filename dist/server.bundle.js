@@ -47163,7 +47163,7 @@ router.get('/jwt', function (req, res) {
           admin: true
         }, _nodeUuid2.default.v4());
         res.cookie('jwt', jwtToken);
-        return res.status(200).end(jwtToken);
+        return res.status(200).end('admin');
       }
     }
     _winston2.default.error('CMS backend returned negative data');
@@ -53124,10 +53124,17 @@ app.use((0, _bodyParser.json)());
 app.use((0, _bodyParser.urlencoded)({ extended: false }));
 app.use((0, _cookieParser2.default)());
 
+app.use(function (req, res, next) {
+  console.log('Url:  ', req.originalUrl);
+  next();
+});
+
 app.use('/api', _api2.default);
 
 app.use(_express2.default.static(__dirname));
+app.use('/admin', _express2.default.static('static'));
 app.use('*', function (req, res) {
+  console.log('all index html route', req.originalUrl);
   res.sendFile(_path2.default.join(__dirname, '/index.html'));
 });
 
