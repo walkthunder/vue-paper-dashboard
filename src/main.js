@@ -27,6 +27,7 @@ Vue.use(SideBar)
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
+  mode: 'history',
   linkActiveClass: 'active'
 })
 

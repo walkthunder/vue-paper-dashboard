@@ -16,12 +16,7 @@ const routes = [
   {
     path: '/',
     component: DashboardLayout,
-    redirect: '/admin/overview'
-  },
-  {
-    path: '/admin',
-    component: DashboardLayout,
-    redirect: '/admin/stats',
+    redirect: '/overview',
     children: [
       {
         path: 'overview',

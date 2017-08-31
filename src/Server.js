@@ -12,11 +12,17 @@ app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
 
+app.use(function (req, res, next) {
+  console.log('Url:  ', req.originalUrl)
+  next()
+})
+
 app.use('/api', api)
 
 // serve pure static assets
 app.use(express.static(__dirname))
 app.use('*', function (req, res) {
+  console.log('all index html route', req.originalUrl)
   res.sendFile(path.join(__dirname, '/index.html'))
 })
 

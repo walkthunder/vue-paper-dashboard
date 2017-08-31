@@ -67,7 +67,7 @@ router.get('/jwt', (req, res) => {
             admin: true
           }, UUID.v4())
           res.cookie('jwt', jwtToken)
-          return res.status(200).end(jwtToken)
+          return res.status(200).end('admin')
         }
       }
       winston.error('CMS backend returned negative data')
