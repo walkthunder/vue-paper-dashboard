@@ -4,7 +4,7 @@ import express from 'express'
 import winston from 'winston'
 import { json, urlencoded } from 'body-parser'
 import cookieParser from 'cookie-parser'
-import api from './api'
+import api from './backend'
 
 var app = express()
 

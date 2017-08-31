@@ -19,6 +19,7 @@
 </template>
 <script>
   import request from 'superagent'
+  import cache from '../../../service/cache'
   export default {
     data () {
       return {
@@ -46,6 +47,7 @@
             console.log(res)
             if (res.ok) {
               console.log(res.body)
+              cache.setItem('token', 'admin')
               this.$router.push('/')
             }
           })

@@ -8,6 +8,8 @@ import Notifications from './components/UIComponents/NotificationPlugin'
 import SideBar from './components/UIComponents/SidebarPlugin'
 import App from './App'
 
+import cache from './service/cache'
+
 // router setup
 import routes from './routes/routes'
 
@@ -29,6 +31,14 @@ const router = new VueRouter({
   routes, // short for routes: routes
   mode: 'history',
   linkActiveClass: 'active'
+})
+
+router.beforeEach(function (to, from, next) {
+  if (to.name !== 'login' && !cache.getItem('token')) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 // global library setup
