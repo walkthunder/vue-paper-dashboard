@@ -9,6 +9,7 @@ import { Router } from 'express'
 import request from 'request'
 import JWT from 'jsonwebtoken'
 import { Strategy, ExtractJwt } from 'passport-jwt'
+import { CMS_HOST } from './config'
 
 // Author defined params
 const SECRET = process.env.SECRET || 'qt-saying'
@@ -39,7 +40,7 @@ const router = Router()
 const verify = (username, password) => {
   return new Promise((resolve, reject) => {
     if (typeof username === 'string' && typeof password === 'string') {
-      request.post('http://121.41.4.238:9997/v1/admin/login', {
+      request.post(`${CMS_HOST}/v1/admin/login`, {
         form: { username, password }
       }, (err, response, body) => {
         if (err) {
