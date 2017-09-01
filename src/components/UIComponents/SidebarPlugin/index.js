@@ -42,6 +42,11 @@ const SidebarStore = {
       name: 'Login',
       icon: 'ti-user',
       path: '/login'
+    },
+    {
+      name: 'Accounts',
+      icon: 'ti-bar-chart-alt',
+      path: '/accounts'
     }
   ],
   displaySidebar (value) {

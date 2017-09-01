@@ -20,6 +20,7 @@ import Chartist from 'chartist'
 import 'bootstrap/dist/css/bootstrap.css'
 import './assets/sass/paper-dashboard.scss'
 import 'es6-promise/auto'
+import plugins from './service/plugins'
 
 // plugin setup
 Vue.use(VueRouter)
@@ -28,6 +29,7 @@ Vue.use(GlobalComponents)
 Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(SideBar)
+Vue.use(plugins)
 
 // configure router
 const router = new VueRouter({

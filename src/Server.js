@@ -5,6 +5,7 @@ import winston from 'winston'
 import { json, urlencoded } from 'body-parser'
 import cookieParser from 'cookie-parser'
 import api from './backend'
+import u2 from './u2'
 
 var app = express()
 
@@ -15,17 +16,23 @@ app.use(cookieParser())
 app.use(function (req, res, next) {
   if (process.env.NODE_ENV !== 'production') {
     res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   }
-  next()
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+  } else {
+    next()
+  }
 })
 
 app.use('/api', api)
+app.use('/u2', u2)
 
 // serve pure static assets
 app.use(express.static(__dirname))
 app.use('*', function (req, res) {
-  console.log('all index html route', req.originalUrl)
+  console.log('no route hit for', req.originalUrl)
   res.sendFile(path.join(__dirname, '/index.html'))
 })
 

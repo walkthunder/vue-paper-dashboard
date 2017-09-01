@@ -2,11 +2,11 @@ const MyPlugin = {}
 MyPlugin.install = function (Vue, options) {
   // get user
   Vue.prototype.$getUser = function () {
-    return this.$root.$children[0].userInfo
+    return this.$root.$children[0].user
   }
   // update user
   Vue.prototype.$updateUser = function (userInfo) {
-    this.$root.$children[0].userInfo = userInfo
+    this.$root.$children[0].user = userInfo
   }
   // get user admin
   Vue.prototype.$getManager = function () {

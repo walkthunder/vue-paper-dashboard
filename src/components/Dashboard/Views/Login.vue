@@ -20,9 +20,8 @@
   </div>
 </template>
 <script>
-  import request from 'superagent'
+  import api from '../../../service/data/login'
   import cache from '../../../service/cache'
-  import { BACKEND_HOST } from '../../../config'
   export default {
     data () {
       return {
@@ -47,30 +46,27 @@
           this.$message.error('密码未填写')
           return
         }
-        console.log('verify user method start', this.user)
         if (!this.user) {
           console.error('No data input')
           return null
         }
-        request
-          .get(`${BACKEND_HOST}/api/jwt`)
-          .query(this.user)
-          .end((err, res) => {
+        api('login').fetch([this.user.username, this.user.password])
+          .then((res) => {
             // Redirect to dashboard if succeeded
-            if (err) {
-              console.error(err)
-              this.$message.error(res.error)
-            }
             console.log(res)
-            if (res.ok) {
-              console.log(res.body)
-              cache.setItem('token', 'admin')
+            if (res && res.data) {
+              cache.setItem('token', res.data.toString())
+              this.$updateUser({ id: res.data })
               this.$message({
                 message: '登录成功',
                 type: 'success'
               })
               this.$router.push('/')
             }
+          })
+          .catch(err => {
+            console.error(err)
+            this.$message.error(err)
           })
       }
     }

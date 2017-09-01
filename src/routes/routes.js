@@ -11,6 +11,7 @@ import Maps from 'src/components/Dashboard/Views/Maps.vue'
 import Typography from 'src/components/Dashboard/Views/Typography.vue'
 import TableList from 'src/components/Dashboard/Views/TableList.vue'
 import Login from 'src/components/Dashboard/Views/Login.vue'
+import Accounts from 'src/components/Dashboard/Views/Accounts.vue'
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
         path: 'login',
         name: 'login',
         component: Login
+      },
+      {
+        path: 'accounts',
+        name: 'accounts',
+        component: Accounts
       }
     ]
   },

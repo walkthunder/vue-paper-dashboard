@@ -59,16 +59,16 @@ router.get('/jwt', (req, res) => {
   const { username, password } = req.query
   return verify(username, password)
     .then(result => {
-      winston.info('router after verify: ', result)
       if (typeof result === 'string') {
         const data = JSON.parse(result)
         if (data.data && data.data.user_id) {
+          const id = data.data.user_id
           const jwtToken = JWT.sign({
-            sub: data.data.user_id,
+            sub: id,
             admin: true
           }, UUID.v4())
           res.cookie('jwt', jwtToken)
-          return res.status(200).end('admin')
+          return res.status(200).send({ data: id })
         }
       }
       winston.error('CMS backend returned negative data')
