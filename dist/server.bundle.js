@@ -47158,14 +47158,12 @@ router.get('/jwt', function (req, res) {
   return verify(username, password).then(function (result) {
     if (typeof result === 'string') {
       var data = JSON.parse(result);
-      console.log('JSON data: ', data);
       if (data.data && data.data.user_id) {
         var id = data.data.user_id;
         var jwtToken = _jsonwebtoken2.default.sign({
           sub: id,
           admin: true
         }, _nodeUuid2.default.v4());
-        _winston2.default.info('router after verify jwtToken: ', jwtToken);
         res.cookie('jwt', jwtToken);
         return res.status(200).send({ data: id });
       }
@@ -47173,9 +47171,21 @@ router.get('/jwt', function (req, res) {
     _winston2.default.error('CMS backend returned negative data');
     res.status(401).end();
   }).catch(function (err) {
-    console.log('error hanpppened...');
     _winston2.default.error(err);
     res.status(401).end();
+  });
+});
+
+router.get('/managers', function (req, res) {
+  _request2.default.get(_config.CMS_HOST + '/v1/admin/user', function (err, response, body) {
+    if (err) {
+      _winston2.default.error(err);
+      res.status(200).end();
+    } else {
+      _winston2.default.log(body);
+      console.log(body);
+      res.status(200).json(JSON.parse(body));
+    }
   });
 });
 
@@ -53196,7 +53206,6 @@ app.use((0, _bodyParser.urlencoded)({ extended: false }));
 app.use((0, _cookieParser2.default)());
 
 app.use(function (req, res, next) {
-  console.log(req.originalUrl);
   if (process.env.NODE_ENV !== 'production') {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
@@ -53214,7 +53223,7 @@ app.use('/u2', _u2.default);
 
 app.use(_express2.default.static(__dirname));
 app.use('*', function (req, res) {
-  console.log('all index html route', req.originalUrl);
+  console.log('no route hit for', req.originalUrl);
   res.sendFile(_path2.default.join(__dirname, '/index.html'));
 });
 
