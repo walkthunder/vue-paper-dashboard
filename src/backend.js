@@ -80,4 +80,17 @@ router.get('/jwt', (req, res) => {
     })
 })
 
+router.get('/managers', (req, res) => {
+  request.get(`${CMS_HOST}/v1/admin/user`, (err, response, body) => {
+    if (err) {
+      winston.error(err)
+      res.status(200).end()
+    } else {
+      winston.log(body)
+      console.log(body)
+      res.status(200).json(JSON.parse(body))
+    }
+  })
+})
+
 export default router
