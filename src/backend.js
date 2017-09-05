@@ -10,6 +10,8 @@ import request from 'request'
 import JWT from 'jsonwebtoken'
 import { Strategy, ExtractJwt } from 'passport-jwt'
 import { CMS_HOST } from './config'
+import crypto from 'crypto'
+import { Buffer } from 'safe-buffer'
 
 // Author defined params
 const SECRET = process.env.SECRET || 'qt-saying'
@@ -78,6 +80,28 @@ router.get('/jwt', (req, res) => {
       winston.error(err)
       res.status(401).end()
     })
+})
+
+function upyunTokenGen (param) {
+  let params = {
+    bucket: 'qingting-pic',
+    expiration: Math.floor(Date.now() / 1000 + 30 * 60),
+    'save-key': 'community/{year}/{mon}/{day}/{filemd5}{.suffix}'
+  }
+  if (param) {
+    params['x-gmkerl-thumb'] = param
+  }
+  let policy = Buffer.from(JSON.stringify(params)).toString('base64')
+  let secret = 'jSWqvtH7XW57O0g3ZmkH1k4jKVQ='
+  let md5Str = crypto.createHash('md5').update(policy + '&' + secret).digest('hex')
+  params.policy = policy
+  params.signature = md5Str
+  return params
+}
+
+router.get('/upyun_token', (req, res) => {
+  let data = upyunTokenGen()
+  res.status(200).send({ data })
 })
 
 router.get('/managers', (req, res) => {

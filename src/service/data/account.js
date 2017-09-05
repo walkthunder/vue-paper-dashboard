@@ -18,6 +18,12 @@ const ENTRIES = {
     host: U2_HOST_TEST,
     path: '/api/v2/internal/alternative_account',
     timeout: 300
+  },
+  upyun_token: {
+    method: 'GET',
+    host: BACKEND_HOST,
+    path: '/api/upyun_token',
+    timeout: 300
   }
 }
 
