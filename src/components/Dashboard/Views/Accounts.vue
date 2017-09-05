@@ -1,22 +1,25 @@
 <template>
   <div class="content is-left">
     <h3>马甲列表</h3>
-    <el-row>
-      <el-col :span="12">
+    <el-row :gutter="22">
+      <el-col :span="9">
         <el-input
         @keyup.native.enter="search"
         placeholder="马甲名称"
-        v-model="s_nick" style="width: 400px">
+        v-model="s_nick" style="width: 300px">
         <el-button slot="append" icon="search" @click="search"></el-button>
       </el-input>
       </el-col>
-      <el-col :span="12">
-      <el-input
-        @keyup.native.enter="search"
-        placeholder="马甲ID"
-        v-model="s_id" style="width: 400px">
-        <el-button slot="append" icon="search" @click="search"></el-button>
-      </el-input>
+      <el-col :span="9">
+        <el-input
+          @keyup.native.enter="search"
+          placeholder="马甲ID"
+          v-model="s_id" style="width: 300px">
+          <el-button slot="append" icon="search" @click="search"></el-button>
+        </el-input>
+      </el-col>
+      <el-col :span="4">
+        <el-button size="large" :data-new=true @click="editBtnHandler">新增</el-button>
       </el-col>
       <el-col :offset="6" :span="6">
       </el-col>
@@ -70,7 +73,7 @@
         align="center"
         label="操作">
         <template scope="scope">
-          <el-button size="small" :data-id="scope.row.alt_id" @click="editBtnHandler">编辑</el-button>
+          <el-button size="small" :data-id="scope.row.alt_id" :data-new=false @click="editBtnHandler">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,7 +102,7 @@
           <el-checkbox v-model="editing.official"></el-checkbox>
         </el-form-item>
         <el-form-item label="所属小编" :label-width="formLabelWidth">
-          <el-select v-model="editing.owners" multiple placeholder="Select">
+          <el-select v-model="editing.owners" multiple clearable placeholder="Select">
             <el-option
               v-for="manager in managers"
               :key="manager.value"
@@ -135,7 +138,14 @@
         s_id: '', // search alt_id
         s_nick: '', // search param alt_name
         manager_id: 123,
-        editing: {},
+        editNotNewMode: 'true',
+        editing: {
+          alt_id: '',
+          alt_name: '',
+          alt_avatar: '',
+          official: false,
+          owners: []
+        },
         total: 0,
         current: 1,
         keyword: '',
@@ -244,20 +254,31 @@
       handleCurrentChange () {
         this.fetchData()
       },
-      // TODO: disable till data loaded. Or else id would be undefined
       editBtnHandler (e) {
         let target = e.target
         if (target.firstElementChild === null) {
           target = target.parentNode
         }
         const id = target.dataset.id
-        window.list = this.list
-        this.editing = this.getAltAccountFromCurList(id)
+        if (id) {
+          this.editing = this.getAltAccountFromCurList(id)
+        } else {
+          this.editing = { owners: [] } // To skip an element bug
+        }
+        this.editNotNewMode = !target.dataset.new
         this.dialogFormVisible = true
       },
       confirmHandler (e) {
         let params = { ...this.editing, manager_id: this.manager_id }
-        api('update_account').fetch({}, { params })
+        let requestPromise
+        if (!this.editNotNewMode) {
+          delete (params.alt_id)
+          requestPromise = api('post_account').fetch({}, { ...params })
+        } else {
+          requestPromise = api('update_account').fetch({}, { ...params })
+        }
+        console.log('-----debug------', params, this.editNotNewMode)
+        requestPromise
           .catch(err => {
             console.error(err)
             this.$message.error('编辑上传失败，请稍后重试')
@@ -266,7 +287,11 @@
           .then(resp => {
             if (resp && resp.data) {
               // Update success, reload the list
-              this.mergeAltAccountToCurList(this.editing)
+              if (this.editNotNewMode) {
+                this.mergeAltAccountToCurList(this.editing)
+              } else {
+                this.fetchData(true)
+              }
             }
             return resp
           })

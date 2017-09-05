@@ -35,12 +35,12 @@ function fetchWithRetry (url, params, options = {}) {
 
   return new Promise(function (resolve, reject) {
     let wrappedFetch = n => {
-      const params = { ...options, method: null }
-      let req = request(method, url).set(params)
+      const data = { ...options, method: null }
+      let req = request(method, url)
       if (method === 'GET') {
-        req = req.query(params)
+        req = req.query(data)
       } else {
-        req = req.send(params)
+        req = req.send(data)
       }
       req
         .then(response => {
