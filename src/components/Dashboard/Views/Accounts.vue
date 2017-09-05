@@ -72,6 +72,9 @@
         <el-form-item label="名称" :label-width="formLabelWidth">
           <el-input v-model="editing.alt_name" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="头像" :label-width="formLabelWidth">
+          <pic-upload :width="160" :height="'auto'" :needCheckSize="false" v-on:updateURL="updateURL" :url="editing.alt_avatar"></pic-upload>
+        </el-form-item>
         <el-form-item label="是否官方" :label-width="formLabelWidth">
           <el-checkbox v-model="editing.official"></el-checkbox>
         </el-form-item>
@@ -97,10 +100,15 @@
   import moment from 'moment'
   import ElCheckbox from '../../../../node_modules/element-ui/packages/checkbox/src/checkbox.vue'
   import ElOption from '../../../../node_modules/element-ui/packages/select/src/option.vue'
+  import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
+  import PicUpload from '../../UIComponents/PicUpload.vue'
   export default {
     components: {
+      ElFormItem,
       ElOption,
-      ElCheckbox},
+      ElCheckbox,
+      PicUpload
+    },
     props: ['user'],
     data () {
       return {
@@ -198,6 +206,9 @@
       '$route': 'fetchData'
     },
     methods: {
+      updateURL (url) {
+        this.editing.alt_avatar = url
+      },
       fetchData () {
         this.isLoading = true
         this.manager_id = '000'

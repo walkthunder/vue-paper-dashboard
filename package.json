@@ -28,6 +28,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
     "request": "^2.81.0",
+    "safe-buffer": "^5.1.1",
     "superagent": "^3.6.0",
     "vue": "^2.3.0",
     "vue-clickaway": "^2.1.0",
