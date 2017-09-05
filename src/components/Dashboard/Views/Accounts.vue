@@ -123,77 +123,7 @@
         dialogFormVisible: false,
         formLabelWidth: '120px',
         /* eslint-disable */
-        managers: [{
-          "id": 48,
-          "nickname": "颜飞",
-          "phone": "",
-          "avatar": "http://qingting-pic.b0.upaiyun.com/2014/0922/20140922164102831.jpg",
-          "sex": 0,
-          "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 50,
-            "nickname": "徐蕊",
-            "phone": "",
-            "avatar": "http://qingting-pic.b0.upaiyun.com/2014/0922/20140922145320150.jpg",
-            "sex": 0,
-            "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 51,
-            "nickname": "李凌",
-            "phone": "",
-            "avatar": "http://qingting-pic.b0.upaiyun.com/2014/0918/20140918180629721.jpg",
-            "sex": 0,
-            "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 52,
-            "nickname": "周杨洁",
-            "phone": "",
-            "avatar": "http://qingting-pic.b0.upaiyun.com/2014/0922/20140922164152791.jpg",
-            "sex": 0,
-            "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 70,
-            "nickname": "于文",
-            "phone": "",
-            "avatar": "http://pic.qingting.fm/2016/0203/2016020317564611.jpg",
-            "sex": 0,
-            "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 71,
-            "nickname": "陈静",
-            "phone": "",
-            "avatar": "",
-            "sex": 0,
-            "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 73,
-            "nickname": "苗义",
-            "phone": "",
-            "avatar": "",
-            "sex": 0,
-            "signature": ""
-          },
-          {
-            "_id": 0,
-            "id": 87,
-            "nickname": "龙涛 - 产品",
-            "phone": "",
-            "avatar": "http://qingting-pic.b0.upaiyun.com/2014/1023/20141023115949408.png",
-            "sex": 0,
-            "signature": ""
-          }],
+        managers: [],
         /* eslint-enable */
       }
     },
