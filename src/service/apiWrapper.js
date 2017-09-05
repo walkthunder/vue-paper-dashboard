@@ -19,7 +19,7 @@ function formatString (str, tags) {
   let query = '?'
   for (let attr in tags) {
     if (tags.hasOwnProperty(attr)) {
-      query += `${attr}=${tags[attr]}`
+      query += `&${encodeURIComponent(attr)}=${encodeURIComponent(tags[attr])}`
     }
   }
   return `${str}${query}`

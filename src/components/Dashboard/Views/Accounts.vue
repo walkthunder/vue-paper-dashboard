@@ -1,6 +1,26 @@
 <template>
   <div class="content is-left">
     <h3>马甲列表</h3>
+    <el-row>
+      <el-col :span="12">
+        <el-input
+        @keyup.native.enter="search"
+        placeholder="马甲名称"
+        v-model="s_nick" style="width: 400px">
+        <el-button slot="append" icon="search" @click="search"></el-button>
+      </el-input>
+      </el-col>
+      <el-col :span="12">
+      <el-input
+        @keyup.native.enter="search"
+        placeholder="马甲ID"
+        v-model="s_id" style="width: 400px">
+        <el-button slot="append" icon="search" @click="search"></el-button>
+      </el-input>
+      </el-col>
+      <el-col :offset="6" :span="6">
+      </el-col>
+    </el-row>
     <br>
     <el-table
       v-loading="isLoading"
@@ -112,6 +132,8 @@
     props: ['user'],
     data () {
       return {
+        s_id: '', // search alt_id
+        s_nick: '', // search param alt_name
         manager_id: 123,
         editing: {},
         total: 0,
@@ -136,14 +158,32 @@
       '$route': 'fetchData'
     },
     methods: {
+      search (e) {
+        console.log('log start', e, this.s_nick)
+        const withoutManager = true
+        this.fetchData(withoutManager)
+          .then(resp => {
+            this.$message.success('列表更新')
+          })
+      },
       updateURL (url) {
         this.editing.alt_avatar = url
-        console.log('this editing dat: ', this.editing)
       },
-      fetchData () {
+      fetchData (withoutManagers = false) {
         this.isLoading = true
         this.manager_id = 'wangxiaomin'
-        return Promise.all([api('accounts').fetch({manager_id: this.manager_id}), api('managers').fetch({})])
+        let params = {manager_id: this.manager_id}
+        if (this.s_nick) {
+          params.alt_name = this.s_nick
+        }
+        if (this.s_id) {
+          params.alt_id = this.s_id
+        }
+        let managersPromise = Promise.resolve()
+        if (!withoutManagers) {
+          managersPromise = api('managers').fetch({})
+        }
+        return Promise.all([api('accounts').fetch(params), managersPromise])
           .then(([response, managersResp]) => {
             this.isLoading = false
             if (response.data) {
