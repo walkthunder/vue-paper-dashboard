@@ -15,10 +15,14 @@ const config = {
 
 const RETRY_DEFAULT = 3
 
-function formatString (str, args) {
-  return str.replace(/{(\d+)}/g, function (match, number) {
-    return typeof args[number] !== 'undefined' ? args[number] : match
-  })
+function formatString (str, tags) {
+  let query = '?'
+  for (let attr in tags) {
+    if (tags.hasOwnProperty(attr)) {
+      query += `${attr}=${tags[attr]}`
+    }
+  }
+  return `${str}${query}`
 }
 
 function fetchWithRetry (url, params, options = {}) {
@@ -76,7 +80,7 @@ class API {
     return getItem(this._getCacheKey(tags))
   }
 
-  fetch (tags = [], options = {}) {
+  fetch (tags = {}, options = {}) {
     if (this.config === undefined) {
       console.info('Unknown API: ', this.key)
       return Promise.reject(errors.API_UNKNOWN)

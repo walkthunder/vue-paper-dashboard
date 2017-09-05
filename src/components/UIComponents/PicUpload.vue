@@ -167,7 +167,7 @@ export default {
       this.$emit('input', url)
     },
     getUpyunToken () {
-      return api('upyun_token').fetch()
+      return api('upyun_token').fetch({})
         .then(resp => {
           if (resp && resp.data) {
             return resp.data

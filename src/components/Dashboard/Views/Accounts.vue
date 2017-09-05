@@ -28,7 +28,7 @@
         <template scope="scope">
           <el-tag
             :type="scope.row.official ? 'primary' : 'gray'"
-            close-transition>{{scope.row.official}}</el-tag>
+            close-transition>{{scope.row.official || false}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -208,11 +208,12 @@
     methods: {
       updateURL (url) {
         this.editing.alt_avatar = url
+        console.log('this editing dat: ', this.editing)
       },
       fetchData () {
         this.isLoading = true
-        this.manager_id = '000'
-        return Promise.all([api('accounts').fetch([this.manager_id]), api('managers').fetch([])])
+        this.manager_id = 'wangxiaomin'
+        return Promise.all([api('accounts').fetch({manager_id: this.manager_id}), api('managers').fetch({})])
           .then(([response, managersResp]) => {
             this.isLoading = false
             if (response.data) {
@@ -286,13 +287,13 @@
       },
       confirmHandler (e) {
         let params = { ...this.editing, manager_id: this.manager_id }
-        api('update_account').fetch([], { params })
+        api('update_account').fetch({}, { params })
           .catch(err => {
             console.error(err)
+            this.$message.error('编辑上传失败，请稍后重试')
             return false
           })
           .then(resp => {
-            console.log(resp)
             if (resp && resp.data) {
               // Update success, reload the list
               this.mergeAltAccountToCurList(this.editing)

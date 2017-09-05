@@ -10,7 +10,7 @@ const ENTRIES = {
   accounts: {
     method: 'GET',
     host: U2_HOST_TEST,
-    path: `/api/v2/internal/alternative_account/account_list?manager_id={0}&alt_id={1}&alt_name={2}&page_no={3}&page_size={4}`,
+    path: `/api/v2/internal/alternative_account/account_list`,
     timeout: 300
   },
   update_account: {

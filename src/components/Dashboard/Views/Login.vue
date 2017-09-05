@@ -50,7 +50,7 @@
           console.error('No data input')
           return null
         }
-        api('login').fetch([this.user.username, this.user.password])
+        api('login').fetch({ username: this.user.username, password: this.user.password })
           .then((res) => {
             // Redirect to dashboard if succeeded
             console.log(res)

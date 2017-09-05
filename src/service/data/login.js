@@ -4,7 +4,7 @@ const ENTRIES = {
   login: {
     method: 'GET',
     host: BACKEND_HOST,
-    path: `/api/jwt?username={0}&password={1}`,
+    path: `/api/jwt`,
     timeout: 300
   }
 }
