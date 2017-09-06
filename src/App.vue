@@ -35,4 +35,17 @@
   export default {}
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+  @import './main.css';
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    min-width: 1000px;
+  }
+  html {
+    min-width: 1000px;
+  }
+</style>
