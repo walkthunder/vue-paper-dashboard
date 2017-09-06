@@ -47175,7 +47175,7 @@ router.get('/jwt', function (req, res) {
           admin: true
         }, _nodeUuid2.default.v4());
         res.cookie('jwt', jwtToken);
-        return res.status(200).send({ data: id });
+        return res.status(200).send({ data: id, errorno: 0, errormsg: '' });
       }
     }
     _winston2.default.error('CMS backend returned negative data');
@@ -47215,7 +47215,18 @@ router.get('/managers', function (req, res) {
       res.status(200).end();
     } else {
       _winston2.default.log(body);
-      console.log(body);
+      res.status(200).json(JSON.parse(body));
+    }
+  });
+});
+
+router.get('/categories', function (req, res) {
+  _request2.default.get(_config.DAL_HOST + '/categories?hierarchy_pid=12&status=99,95,0', function (err, response, body) {
+    if (err) {
+      _winston2.default.error(err);
+      res.status(200).end();
+    } else {
+      _winston2.default.log(body);
       res.status(200).json(JSON.parse(body));
     }
   });
@@ -53319,6 +53330,7 @@ var BACKEND_HOST = exports.BACKEND_HOST = 'http://localhost:8011';
 var CMS_HOST = exports.CMS_HOST = process.env.CMS_HOST;
 var U2_HOST = exports.U2_HOST = 'https://u2.qingting.fm';
 var U2_HOST_TEST = exports.U2_HOST_TEST = 'http://114.215.242.136:7777';
+var DAL_HOST = exports.DAL_HOST = process.env.DAL_HOST;
 
 /***/ }),
 /* 500 */,
