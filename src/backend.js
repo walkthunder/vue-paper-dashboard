@@ -101,7 +101,7 @@ function upyunTokenGen (param) {
 
 router.get('/upyun_token', (req, res) => {
   let data = upyunTokenGen()
-  res.status(200).send({ data })
+  res.status(200).send({ data, errorno: 0, errormsg: '' })
 })
 
 router.get('/managers', (req, res) => {
