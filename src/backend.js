@@ -9,7 +9,7 @@ import { Router } from 'express'
 import request from 'request'
 import JWT from 'jsonwebtoken'
 import { Strategy, ExtractJwt } from 'passport-jwt'
-import { CMS_HOST } from './config'
+import { CMS_HOST, DAL_HOST } from './config'
 import crypto from 'crypto'
 import { Buffer } from 'safe-buffer'
 
@@ -111,7 +111,18 @@ router.get('/managers', (req, res) => {
       res.status(200).end()
     } else {
       winston.log(body)
-      console.log(body)
+      res.status(200).json(JSON.parse(body))
+    }
+  })
+})
+
+router.get('/categories', (req, res) => {
+  request.get(`${DAL_HOST}/categories?hierarchy_pid=12&status=99,95,0`, (err, response, body) => {
+    if (err) {
+      winston.error(err)
+      res.status(200).end()
+    } else {
+      winston.log(body)
       res.status(200).json(JSON.parse(body))
     }
   })
