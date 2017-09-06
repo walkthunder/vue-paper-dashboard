@@ -25,7 +25,7 @@ function formatString (str, tags) {
   return `${str}${query}`
 }
 
-function fetchWithRetry (url, params, options = {}) {
+function fetchWithRetry (url, params = {}, options = {}) {
   let retries = RETRY_DEFAULT
   let method = options.method || 'GET'
   let timeout = options.timeout || 1000
@@ -36,7 +36,9 @@ function fetchWithRetry (url, params, options = {}) {
   return new Promise(function (resolve, reject) {
     let wrappedFetch = n => {
       const data = { ...options, method: null }
-      let req = request(method, url)
+      delete (data.method)
+      delete (data.params)
+      let req = request(method, url).set(params)
       if (method === 'GET') {
         req = req.query(data)
       } else {
@@ -101,6 +103,13 @@ class API {
       p.then((resp) => {  // timeout not expired
         if (resp.ok) {  // check http response code
           let retData = resp.body
+          let errorNo = retData.errorno
+          if (typeof errorNo === 'undefined') {
+            errorNo = retData.errcode
+          }
+          if (errorNo !== 0) {
+            return reject(errors.API_REQUEST_FAILED)
+          }
           let newData = retData.data || retData.Data
           if (!newData) {
             reject(retData)
