@@ -89,9 +89,6 @@
     </div>
     <el-dialog title="马甲编辑" :visible.sync="dialogFormVisible">
       <el-form :model="editing">
-        <el-form-item label="ID" :label-width="formLabelWidth">
-          <el-input v-model="editing.alt_id" auto-complete="off"></el-input>
-        </el-form-item>
         <el-form-item label="名称" :label-width="formLabelWidth">
           <el-input v-model="editing.alt_name" auto-complete="off"></el-input>
         </el-form-item>
@@ -270,14 +267,16 @@
       },
       confirmHandler (e) {
         let params = { ...this.editing, manager_id: this.manager_id }
+        if (params.owners) {
+          params.owners = params.owners.join('_')
+        }
         let requestPromise
-        if (!this.editNotNewMode) {
+        if (!this.editNotNewMode) { // New account
           delete (params.alt_id)
           requestPromise = api('post_account').fetch({}, { ...params })
-        } else {
+        } else { // Edit mode
           requestPromise = api('update_account').fetch({}, { ...params })
         }
-        console.log('-----debug------', params, this.editNotNewMode)
         requestPromise
           .catch(err => {
             console.error(err)
@@ -292,6 +291,8 @@
               } else {
                 this.fetchData(true)
               }
+            } else {
+              this.$message.error('编辑上传失败，请稍后重试')
             }
             return resp
           })
