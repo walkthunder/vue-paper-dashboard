@@ -12,6 +12,7 @@ import Typography from 'src/components/Dashboard/Views/Typography.vue'
 import TableList from 'src/components/Dashboard/Views/TableList.vue'
 import Login from 'src/components/Dashboard/Views/Login.vue'
 import Accounts from 'src/components/Dashboard/Views/Accounts.vue'
+import Reply from 'src/components/Dashboard/Views/Reply.vue'
 
 const routes = [
   {
@@ -61,8 +62,13 @@ const routes = [
       },
       {
         path: 'accounts',
-        name: 'accounts',
+        name: '马甲管理',
         component: Accounts
+      },
+      {
+        path: 'reply/:category_id?',
+        name: '评论管理',
+        component: Reply
       }
     ]
   },

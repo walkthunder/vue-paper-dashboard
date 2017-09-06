@@ -47,6 +47,11 @@ const SidebarStore = {
       name: 'Accounts',
       icon: 'ti-bar-chart-alt',
       path: '/accounts'
+    },
+    {
+      name: 'Reply',
+      icon: 'ti-pulse',
+      path: 'reply'
     }
   ],
   displaySidebar (value) {
