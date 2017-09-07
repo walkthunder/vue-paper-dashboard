@@ -107,6 +107,7 @@
         label="操作">
       </el-table-column>
     </el-table>
+    <br>
     <div class="block">
       <el-pagination
         :current-page.sync=this.pageNo
@@ -114,7 +115,7 @@
         @current-change="handleCurrentChange"
         :page-sizes="[10, 20, 50, 100]"
         :page-size=this.pageSize
-        layout="sizes, prev, pager, next"
+        layout="total, sizes, prev, pager, next, jumper"
         :total=this.mTotal>
       </el-pagination>
     </div>
