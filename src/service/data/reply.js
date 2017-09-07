@@ -18,6 +18,12 @@ const ENTRIES = {
     host: U2_HOST_TEST,
     path: '/api/v2/internal/reply',
     timeout: 300
+  },
+  delete: {
+    method: 'DELETE',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/reply',
+    timeout: 300
   }
 }
 const api = new API(ENTRIES)

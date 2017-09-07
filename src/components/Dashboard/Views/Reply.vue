@@ -108,6 +108,7 @@
         label="操作">
         <template scope="scope">
           <el-button size="small" :data-content="scope.row" @click.native.prevent="answerHandler(scope.$index, contents)">回复</el-button>
+          <el-button size="small" :data-content="scope.row" @click.native.prevent="deleteHandler(scope.$index, contents)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,6 +153,26 @@
         <el-button type="primary" @click.native.prevent="answer">发布</el-button>
       </el-row>
     </el-dialog>
+    <el-dialog title="删除回复" :visible.sync="isDeleting">
+      <el-form label-width="120px">
+        <el-form-item label="选择删除原因" prop="type">
+          <el-checkbox-group v-model="deleteReason">
+            <el-checkbox label="无意义的回复" name="type"></el-checkbox>
+            <el-checkbox label="营销广告" name="type"></el-checkbox>
+            <el-checkbox label="恶意攻击谩骂" name="type"></el-checkbox>
+            <el-checkbox label="淫秽色情" name="type"></el-checkbox>
+            <el-checkbox label="政治反动" name="type"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="其他" prop="desc">
+          <el-input type="textarea" v-model="deleteReasonElse"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="doDel">确定删除</el-button>
+          <el-button type="primary" @click="cancelDel">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -160,9 +181,12 @@
   import accountsAPI from '../../../service/data/account'
   import moment from 'moment'
   import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue'
+  import ElDialog from '../../../../node_modules/element-ui/packages/dialog/src/component.vue'
 
   export default {
-    components: {ElButton},
+    components: {
+      ElDialog,
+      ElButton},
     data () {
       return {
         manager_id: 'wangxiaomin', // Mock data
@@ -172,6 +196,10 @@
         answerText: '',
         accounts: [],
         useAccountId: '',
+        isDeleting: false,
+        deleteId: '',
+        deleteReason: [],
+        deleteReasonElse: '',
         date_range: '',
         mCategoryId: 0,
         mContentLoading: true,
@@ -332,6 +360,12 @@
             this.accounts = data
           })
       },
+      deleteHandler (index, rows) {
+        this.isDeleting = true
+        let content = rows[index]
+        this.deleteId = content._id
+        console.log('ready to delete content: ', this.deleteId)
+      },
       getAccounts () {
         let params = {manager_id: 'wangxiaomin'}
         return Promise.all([accountsAPI('accounts').fetch(params), accountsAPI('random').fetch({})])
@@ -367,6 +401,36 @@
             console.error(err)
             this.$message.error(err)
           })
+      },
+      doDel () {
+        let reasons = this.deleteReason
+        if (this.deleteReasonElse) {
+          reasons.push(this.deleteReasonElse)
+        }
+        console.log('Do delete', reasons)
+        let params = {
+          manager_id: this.manager_id,
+          reply_id: this.deleteId,
+          reason: reasons.join('_')
+        }
+        api('delete').fetch({}, params)
+          .then(resp => {
+            if (resp && resp.data) {
+              this.isDeleting = false
+              this.$message.success('删除成功')
+              this.fetchData()
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message.error('删除失败，请稍后重试')
+          })
+      },
+      cancelDel () {
+        this.deleteReason = []
+        this.deleteReasonElse = ''
+        this.deleteId = ''
+        this.isDeleting = false
       }
     }
   }
