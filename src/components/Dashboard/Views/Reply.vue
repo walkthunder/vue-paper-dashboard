@@ -39,7 +39,7 @@
         </el-input>
       </el-col>
       <el-col :span="4">
-        <el-button @click="search">查询</el-button>
+        <el-button type="primary" icon="search" @click="search">查询</el-button>
       </el-col>
       <el-col :offset="6" :span="6">
       </el-col>
@@ -107,6 +107,17 @@
         label="操作">
       </el-table-column>
     </el-table>
+    <div class="block">
+      <el-pagination
+        :current-page.sync=this.pageNo
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size=this.pageSize
+        layout="sizes, prev, pager, next"
+        :total=this.mTotal>
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -163,7 +174,7 @@
         this.date_range = [beginTime, endTime]
         return this.date_range
       },
-      fetchData () {
+      fetchData (withoutCategory = false) {
         this.mContentLoading = true
         let params = {}
         this.pageNo && (params.page_no = this.pageNo)
@@ -182,11 +193,16 @@
         if (this.mCategoryId) {
           params.category = this.mCategoryId
         }
-
-        return Promise.all([api('categories').fetch({}), api('reply').fetch(params)])
+        let catPromise = Promise.resolve()
+        if (!withoutCategory) {
+          catPromise = api('categories').fetch({})
+        }
+        return Promise.all([catPromise, api('reply').fetch(params)])
           .then(([resp, reply]) => {
             let replies = reply.data.reply || []
+            this.mTotal = reply.data.total
             if (!replies || replies.length === 0) {
+              // TODO: Remove mock data
               replies.push({
                 user_avatar: 'http://q.qlogo.cn/qqapp/100387802/9229501C45EACC8CAC95C4BFC31BF782/40',
                 podcaster: [
@@ -209,11 +225,13 @@
               })
             }
             this.contents = replies
-            this.categories = [ ...resp.data, {
-              id: 0,
-              name: '全部',
-              status: 99
-            }]
+            if (!withoutCategory) {
+              this.categories = [ ...resp.data, {
+                id: 0,
+                name: '全部',
+                status: 99
+              }]
+            }
           })
           .then(() => {
             this.mContentLoading = false
@@ -240,7 +258,26 @@
         this.sAlbumName = ''
         this.pageNo = 1
         this.contents = []
-        this.fetchData()
+        this.fetchData(true)
+          .then(resp => {
+            this.$message.success('列表更新')
+          })
+      },
+      handleSizeChange (val) {
+        console.log(`${val} items per page`)
+        this.pageSize = val
+        this.fetchData(true)
+          .then(resp => {
+            this.$message.success('列表更新')
+          })
+      },
+      handleCurrentChange (val) {
+        console.log(`current page: ${val}`)
+        this.pageNo = val
+        this.fetchData(true)
+          .then(resp => {
+            this.$message.success('列表更新')
+          })
       }
     }
   }
