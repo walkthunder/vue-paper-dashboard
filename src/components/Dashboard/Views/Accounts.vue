@@ -178,14 +178,8 @@
       },
       fetchData (withoutManagers = false) {
         this.isLoading = true
-        this.manager_id = 'wangxiaomin'
+        this.manager_id = 'wangxiaomin' // Mock data
         let params = {manager_id: this.manager_id}
-        if (this.s_nick) {
-          params.alt_name = this.s_nick
-        }
-        if (this.s_id) {
-          params.alt_id = this.s_id
-        }
         let managersPromise = Promise.resolve()
         if (!withoutManagers) {
           managersPromise = api('managers').fetch({})

@@ -30,6 +30,12 @@ const ENTRIES = {
     host: BACKEND_HOST,
     path: '/api/upyun_token',
     timeout: 300
+  },
+  random: {
+    method: 'GET',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/alternative_account/random',
+    timeout: 300
   }
 }
 
