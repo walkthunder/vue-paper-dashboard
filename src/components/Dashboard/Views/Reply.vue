@@ -46,6 +46,7 @@
     </el-row>
     <br>
     <el-table
+      fit
       v-loading="mContentLoading"
       element-loading-text="评论数据加载中" :data="contents">
       <el-table-column
@@ -58,7 +59,7 @@
         prop="user_name"
         min-width="110"
         align="center"
-        label="名称">
+        label="用户名">
       </el-table-column>
       <el-table-column
         prop="create_time"
@@ -105,6 +106,9 @@
         min-width="220"
         align="center"
         label="操作">
+        <template scope="scope">
+          <el-button size="small" :data-content="scope.row" @click.native.prevent="answerHandler(scope.$index, contents)">回复</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <br>
@@ -119,11 +123,41 @@
         :total=this.mTotal>
       </el-pagination>
     </div>
+    <el-dialog title="回复评论" :visible.sync="isAnswering">
+      <el-row style="margin-bottom: 20px;">
+        <el-col>
+        <span :model="answerContent">{{answerContent.user_name}} 回复 {{answerContent.reply_to && answerContent.reply_to.user_name}} : {{answerContent.content}}</span>
+        <br>
+        </el-col>
+      </el-row>
+      <el-row style="margin-bottom: 20px;">
+        <el-col :span="12" style="text-align: left;">
+          <el-select v-model="useAccountId" placeholder="选择马甲" @change="selectAccount">
+            <el-option v-for="account in accounts" :key="account.alt_id" :value="account.alt_id" :label="account.alt_name"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="12" style="text-align: left;">
+          <el-date-picker
+            v-model="answerTime"
+            type="datetime"
+            placeholder="未选择时实时发布">
+          </el-date-picker>
+        </el-col>
+      </el-row>
+      <el-row style="margin-bottom: 20px;">
+        <el-input type="textarea" :rows="5" placeholder="回复" v-model="answerText">
+        </el-input>
+      </el-row>
+      <el-row>
+        <el-button type="primary" @click.native.prevent="answer">发布</el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import api from '../../../service/data/reply'
+  import accountsAPI from '../../../service/data/account'
   import moment from 'moment'
   import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue'
 
@@ -131,6 +165,13 @@
     components: {ElButton},
     data () {
       return {
+        manager_id: 'wangxiaomin', // Mock data
+        isAnswering: false,
+        answerContent: {},
+        answerTime: '',
+        answerText: '',
+        accounts: [],
+        useAccountId: '',
         date_range: '',
         mCategoryId: 0,
         mContentLoading: true,
@@ -278,6 +319,53 @@
         this.fetchData(true)
           .then(resp => {
             this.$message.success('列表更新')
+          })
+      },
+      answerHandler (index, rows) {
+        this.isAnswering = true
+        let content = rows[index]
+        this.answerContent = content
+        // Get available accounts
+        this.getAccounts()
+          .then(data => {
+            console.log('Available accounts  : ', data)
+            this.accounts = data
+          })
+      },
+      getAccounts () {
+        let params = {manager_id: 'wangxiaomin'}
+        return Promise.all([accountsAPI('accounts').fetch(params), accountsAPI('random').fetch({})])
+          .then(([resp, random]) => {
+            console.log('accounts get: ', resp.data)
+            console.log('random resp: ', random.data)
+            // The first one should be default option
+            return [ random.data, ...resp.data.alt_accounts ]
+          })
+      },
+      selectAccount () {
+        console.log(' Account selected: ', this.useAccountId)
+      },
+      answer () {
+        let params = {
+          manager_id: this.manager_id,
+          user_id: this.useAccountId || this.accounts[0].alt_id,
+          topic_id: this.answerContent.topic_id,
+          reply_to: this.answerContent.reply_to.id,
+          content: this.answerText
+        }
+        if (this.answerTime) {
+          params.reply_time = this.answerTime
+        }
+        console.log('answer params: ', params)
+        api('answer').fetch({}, { ...params })
+          .then(resp => {
+            console.log('reply to reply: ', resp)
+            this.isAnswering = false
+            this.$message.success('回复成功')
+          })
+          .catch(err => {
+            console.error(err)
+            this.$message.error(err)
           })
       }
     }
