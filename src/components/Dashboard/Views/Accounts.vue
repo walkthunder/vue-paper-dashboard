@@ -285,6 +285,7 @@
               } else {
                 this.fetchData(true)
               }
+              this.$message.success('修改成功')
             } else {
               this.$message.error('编辑上传失败，请稍后重试')
             }
