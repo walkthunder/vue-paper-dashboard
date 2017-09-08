@@ -1,30 +1,28 @@
 <template>
   <div class="card card-user">
     <div class="image">
-      <img src="static/img/background.jpg" alt="...">
+      <img src="/static/img/background.jpg" alt="...">
     </div>
     <div class="content">
       <div class="author">
-        <img class="avatar border-white" src="static/img/faces/face-2.jpg" alt="...">
-        <h4 class="title">Chet Faker
+        <img class="avatar border-white" :src="this.avatar" alt="...">
+        <h4 class="title">{{this.name}}
           <br>
           <a href="#">
-            <small>@chetfaker</small>
+            <small>{{this.id}}</small>
           </a>
         </h4>
       </div>
       <p class="description text-center">
-        "I like the way you work it
-        <br> No diggity
-        <br> I wanna bag it up"
+       {{description}}
       </p>
     </div>
     <hr>
     <div class="text-center">
       <div class="row">
         <div v-for="(info,index) in details" :class="getClasses(index)">
-          <h5>{{info.title}}
-            <br>
+          <el-button type="primary" :icon="info.icon"></el-button>
+          <h5>
             <small>{{info.subTitle}}</small>
           </h5>
         </div>
@@ -34,20 +32,24 @@
 </template>
 <script>
   export default {
+    props: ['name', 'id', 'avatar', 'description'],
     data () {
       return {
         details: [
           {
+            icon: 'delete',
             title: '12',
-            subTitle: 'Files'
+            subTitle: '封禁'
           },
           {
+            icon: 'edit',
             title: '2GB',
-            subTitle: 'Used'
+            subTitle: '清空头像'
           },
           {
+            icon: 'edit',
             title: '24,6$',
-            subTitle: 'Spent'
+            subTitle: '清空昵称'
           }
         ]
       }
@@ -68,5 +70,5 @@
 
 </script>
 <style>
-  
+
 </style>

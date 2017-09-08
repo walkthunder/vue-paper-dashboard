@@ -30,7 +30,7 @@
       element-loading-text="拼命加载中"
       border
       :data="list"
-      style="width: 100%">
+      style="width: 100%;">
       <el-table-column
         prop="alt_id"
         min-width="110"

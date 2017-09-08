@@ -102,7 +102,6 @@
         label="点赞数">
       </el-table-column>
       <el-table-column
-        prop="user_name"
         min-width="220"
         align="center"
         label="操作">

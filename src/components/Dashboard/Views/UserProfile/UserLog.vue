@@ -1,0 +1,179 @@
+<template>
+  <div>
+    <el-menu theme="dark" :default-avtive="activeIndex" mode="horizontal" @select="selectHandler" class="menu">
+      <el-menu-item index="1">节目回复</el-menu-item>
+      <el-menu-item index="2">专辑回复</el-menu-item>
+      <el-menu-item index="3">购买记录</el-menu-item>
+    </el-menu>
+    <el-table
+      v-if="activeIndex == 1"
+      v-loading="isLoading"
+      element-loading-text="拼命加载中"
+      :data="programReply"
+      style="width: 100%;"
+      border>
+      <el-table-column
+        prop="_id"
+        min-width="110"
+        align="center"
+        label="ID">
+      </el-table-column>
+      <el-table-column
+        prop="create_time"
+        :formatter="timeFormat"
+        min-width="110"
+        align="center"
+        label="回复时间">
+      </el-table-column>
+      <el-table-column
+        prop="program_name"
+        min-width="110"
+        align="center"
+        label="所属节目">
+      </el-table-column>
+      <el-table-column
+        prop="content"
+        min-width="110"
+        align="center"
+        label="回复内容">
+      </el-table-column>
+      <el-table-column
+        prop="thumb_count"
+        :formatter="defaultNum"
+        min-width="110"
+        align="center"
+        label="点赞数">
+      </el-table-column>
+      <el-table-column
+        min-width="110"
+        align="center"
+        label="操作">
+        <template scope="scope">
+          <el-button size="small" :data-content="scope.row" @click.native.prevent="deleteHandler(scope.$index, programReply)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-dialog title="删除回复" :visible.sync="isDeleting">
+      <el-form label-width="120px">
+        <el-form-item label="选择删除原因" prop="type">
+          <el-checkbox-group v-model="deleteReason">
+            <el-checkbox label="无意义的回复" name="type"></el-checkbox>
+            <el-checkbox label="营销广告" name="type"></el-checkbox>
+            <el-checkbox label="恶意攻击谩骂" name="type"></el-checkbox>
+            <el-checkbox label="淫秽色情" name="type"></el-checkbox>
+            <el-checkbox label="政治反动" name="type"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="其他" prop="desc">
+          <el-input type="textarea" v-model="deleteReasonElse"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="doDel">确定删除</el-button>
+          <el-button type="primary" @click="cancelDel">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
+</template>
+<script>
+  import moment from 'moment'
+  import api from '../../../../service/data/reply'
+  export default {
+    data () {
+      return {
+        manager_id: 'wangxiaomin',
+        isLoading: true,
+        isDeleting: false,
+        deleteReason: [],
+        deleteReasonElse: '',
+        activeIndex: 1,
+        reply_type: 'PROGRAM',
+        userId: '',
+        pageNo: 1,
+        pageSize: 20,
+        programReply: [],
+        albumReply: [],
+        shopLog: []
+      }
+    },
+    methods: {
+      fetchData (dataPromise) {
+        return dataPromise.then(resp => {
+          if (resp && resp.data && resp.data.reply) {
+            this.programReply = resp.data.reply
+            this.isLoading = false
+          }
+        })
+      },
+      selectHandler (key, path) {
+        if (key) {
+          this.activeIndex = key
+        }
+        let params = {}
+        this.pageNo && (params.page_no = this.pageNo)
+        this.pageSize && (params.page_size = this.pageSize)
+        this.userId && (params.user_id = this.userId)
+        let dataPromise = Promise.resolve()
+        if (this.activeIndex.toString() === '1') {
+          this.reply_type = 'PROGRAM'
+          params.reply_type = this.reply_type
+          dataPromise = api('reply').fetch(params)
+        } else if (this.activeIndex.toString() === '2') {
+          this.reply_type = 'ALBUM'
+          params.reply_type = this.reply_type
+          dataPromise = api('reply').fetch(params)
+        } else {
+          // Shop history
+        }
+        return this.fetchData(dataPromise)
+      },
+      timeFormat (row, col, val) {
+        return moment(parseInt(val, 10) * 1000).format('MMMM Do YYYY, h:mm:ss a').toString()
+      },
+      defaultNum (row, col, val) {
+        return val || 0
+      },
+      deleteHandler (index, contents) {
+        this.deleteId = contents[index]._id
+        // TODO: Get manager info
+        this.isDeleting = true
+      },
+      doDel () {
+        let reasons = this.deleteReason
+        if (this.deleteReasonElse) {
+          reasons.push(this.deleteReasonElse)
+        }
+        let params = {
+          manager_id: this.manager_id,
+          reply_id: this.deleteId,
+          reason: reasons.join('_')
+        }
+        api('delete').fetch({}, params)
+          .then(resp => {
+            if (resp && resp.data) {
+              this.isDeleting = false
+              this.$message.success('删除成功')
+              this.selectHandler()
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message.error('删除失败，请稍后重试')
+          })
+      },
+      cancelDel () {
+        this.deleteReason = []
+        this.deleteReasonElse = ''
+        this.deleteId = ''
+        this.isDeleting = false
+      }
+    }
+  }
+</script>
+<style>
+  .menu {
+    border-radius: 6px;
+    padding: 0 15px;
+  }
+
+</style>
