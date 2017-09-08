@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-menu theme="dark" :default-avtive="activeIndex" mode="horizontal" @select="selectHandler" class="menu">
+    <el-menu theme="dark" :default-active="activeIndex" mode="horizontal" @select="selectHandler" class="menu">
       <el-menu-item index="1">节目回复</el-menu-item>
       <el-menu-item index="2">专辑回复</el-menu-item>
       <el-menu-item index="3">购买记录</el-menu-item>
@@ -86,7 +86,7 @@
         isDeleting: false,
         deleteReason: [],
         deleteReasonElse: '',
-        activeIndex: 1,
+        activeIndex: '1',
         reply_type: 'PROGRAM',
         userId: '',
         pageNo: 1,
@@ -95,6 +95,14 @@
         albumReply: [],
         shopLog: []
       }
+    },
+    mounted () {
+      this.$nextTick(() => {
+        this.selectHandler()
+      })
+    },
+    watch: {
+      '$route': 'selectHandler'
     },
     methods: {
       fetchData (dataPromise) {
