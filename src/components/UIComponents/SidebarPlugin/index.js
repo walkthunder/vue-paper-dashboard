@@ -51,7 +51,12 @@ const SidebarStore = {
     {
       name: 'Reply',
       icon: 'ti-pulse',
-      path: 'reply'
+      path: '/reply'
+    },
+    {
+      name: 'Account',
+      icon: 'ti-pin',
+      path: '/account'
     }
   ],
   displaySidebar (value) {
