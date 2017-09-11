@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-user">
+  <div class="card card-user" id="user-info">
     <div class="image">
       <img src="/static/img/background.jpg" alt="...">
     </div>
@@ -20,7 +20,7 @@
     <hr>
     <div class="text-center">
       <div class="row">
-        <div v-for="(info,index) in details" :class="getClasses(index)">
+        <div v-for="(info, index) in details" :class="getClasses(index)" @click="showBan">
           <el-button type="primary" :icon="info.icon"></el-button>
           <h5>
             <small>{{info.subTitle}}</small>
@@ -28,33 +28,72 @@
         </div>
       </div>
     </div>
+    <el-dialog title="封禁用户" :visible.sync="isBanning">
+      <el-form label-width="120px">
+        <el-form-item label="选择封禁原因" prop="type">
+          <el-checkbox-group v-model="bannedReason">
+            <el-checkbox label="无意义的回复" name="type"></el-checkbox>
+            <el-checkbox label="营销广告" name="type"></el-checkbox>
+            <el-checkbox label="恶意攻击谩骂" name="type"></el-checkbox>
+            <el-checkbox label="淫秽色情" name="type"></el-checkbox>
+            <el-checkbox label="政治反动" name="type"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="其他" prop="desc">
+          <el-input type="textarea" v-model="bannedReasonElse"></el-input>
+        </el-form-item>
+        <el-form-item label="永久封禁">
+          <el-checkbox v-model="bannedEver"></el-checkbox>
+        </el-form-item>
+        <el-form-item label="解封时间" prop="date">
+          <el-date-picker
+            v-model="until"
+            type="datetime"
+            placeholder="解封时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="doBan">确定封禁</el-button>
+          <el-button type="primary" @click="cancelBan">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
+  import api from '../../../../service/data/account'
   export default {
     props: ['name', 'id', 'avatar', 'description'],
     data () {
       return {
+        isBanning: false,
+        bannedReason: [],
+        bannedReasonElse: '',
+        bannedEver: false,
+        until: '',
         details: [
           {
+            key: 'ban',
             icon: 'delete',
-            title: '12',
             subTitle: '封禁'
           },
           {
+            key: 'avatar',
             icon: 'edit',
-            title: '2GB',
             subTitle: '清空头像'
           },
           {
+            key: 'nick',
             icon: 'edit',
-            title: '24,6$',
             subTitle: '清空昵称'
           }
         ]
       }
     },
     methods: {
+      showBan () {
+        this.isBanning = true
+      },
       getClasses (index) {
         var remainder = index % 3
         if (remainder === 0) {
@@ -64,11 +103,34 @@
         } else {
           return 'col-md-3'
         }
+      },
+      doBan () {
+        console.log('Ban the user')
+        let params = {
+          manager_id: 'wangxiaomin',
+          user_id: this.id
+        }
+        let reason = this.bannedReason.join('_') + '_' + this.bannedReasonElse
+        params.reason = reason
+        if (!this.bannedEver) {
+          params.unbanned_time = this.until
+        }
+        return api('ban').fetch(params)
+          .then(resp => {
+            console.log('ban result resp : ', resp)
+            this.isBanning = false
+            this.$message.success('封禁用户成功')
+          })
+      },
+      cancelBan () {
+        this.isBanning = false
       }
     }
   }
 
 </script>
 <style>
-
+  #user-info {
+    position: static;
+  }
 </style>

@@ -65,7 +65,7 @@
         align="center"
         label="操作">
         <template scope="scope">
-          <el-button size="small" :data-content="scope.row" @click.native.prevent="unban(scope.$index, contents)">解封</el-button>
+          <el-button size="small" :data-content="scope.row" @click.native.prevent="unban(scope.$index, list)">解封</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -85,7 +85,9 @@
 </template>
 <script>
   import api from '../../../service/data/account'
+  import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
   export default {
+    components: {ElFormItem},
     data () {
       return {
         isLoading: true,
@@ -103,8 +105,16 @@
       })
     },
     methods: {
-      unban (index, contents) {
-        console.log(' 解禁 ', contents[index])
+      unban (index, list) {
+        console.log(' 解禁 ', list[index])
+        let params = {
+          manager_id: 'wangxiaomin',
+          user_id: list[index].user_id
+        }
+        return api('unban').fetch(params)
+          .then(resp => {
+            this.$message.success('解禁用户成功')
+          })
       },
       fetchData () {
         this.isLoading = true
@@ -138,7 +148,6 @@
           })
       },
       handleCurrentChange (val) {
-        console.log(`current page: ${val}`)
         this.pageNo = val
         this.fetchData()
           .then(resp => {
@@ -146,7 +155,6 @@
           })
       },
       search (e) {
-        console.log('search start')
         this.fetchData()
           .then(resp => {
             this.$message.success('列表更新')
