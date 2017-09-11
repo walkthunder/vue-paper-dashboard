@@ -1,4 +1,5 @@
 import request from 'superagent'
+import { trimEnd } from 'lodash'
 import { getItem } from './storage'
 
 const errors = {
@@ -22,10 +23,11 @@ function formatString (str, tags) {
       if (attr === 's_T_A_T_I_C') {
         query = `/${encodeURIComponent(tags[attr])}${query}`
       } else {
-        query += `&${encodeURIComponent(attr)}=${encodeURIComponent(tags[attr])}`
+        query += `${encodeURIComponent(attr)}=${encodeURIComponent(tags[attr])}&`
       }
     }
   }
+  query = trimEnd(query, '&')
   return `${str}${query}`
 }
 
@@ -108,8 +110,15 @@ class API {
         if (resp.ok) {  // check http response code
           let retData = resp.body
           let errorNo = retData.errorno
+          let errorMsg = retData.msg
           if (typeof errorNo === 'undefined') {
             errorNo = retData.errcode
+          }
+          if (typeof errorNo === 'undefined') {
+            errorNo = retData.code
+          }
+          if (errorNo === 200 && errorMsg === 'success') {
+            return resolve(retData)
           }
           if (errorNo !== 0) {
             return reject(errors.API_REQUEST_FAILED)
