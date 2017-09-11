@@ -48,6 +48,24 @@ const ENTRIES = {
     host: PAY_HOST_TEST,
     path: '/api/v1/subscriptions',
     timeout: 600
+  },
+  ban: {
+    method: 'POST',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/banned_user',
+    timeout: 300
+  },
+  unban: {
+    method: 'DELETE',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/banned_user',
+    timeout: 300
+  },
+  banned_list: {
+    method: 'GET',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/banned_user',
+    timeout: 300
   }
 }
 

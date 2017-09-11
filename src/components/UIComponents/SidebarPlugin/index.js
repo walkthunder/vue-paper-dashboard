@@ -57,6 +57,11 @@ const SidebarStore = {
       name: 'Account',
       icon: 'ti-pin',
       path: '/account'
+    },
+    {
+      name: 'BannedUsers',
+      icon: 'ti-na',
+      path: '/banned-users'
     }
   ],
   displaySidebar (value) {
