@@ -6,6 +6,7 @@
       <el-menu-item index="3">购买记录</el-menu-item>
     </el-menu>
     <el-table
+      key="programTable"
       v-if="activeIndex == 1"
       v-loading="isLoading"
       element-loading-text="拼命加载中"
@@ -53,6 +54,106 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-table
+      key="albumTable"
+      v-if="activeIndex == 2"
+      v-loading="isLoading"
+      element-loading-text="拼命加载中"
+      :data="albumReply"
+      style="width: 100%;"
+      border>
+      <el-table-column
+        prop="_id"
+        min-width="110"
+        align="center"
+        label="ID">
+      </el-table-column>
+      <el-table-column
+        prop="create_time"
+        :formatter="timeFormat"
+        min-width="110"
+        align="center"
+        label="回复时间">
+      </el-table-column>
+      <el-table-column
+        prop="program_name"
+        min-width="110"
+        align="center"
+        label="所属节目">
+      </el-table-column>
+      <el-table-column
+        prop="content"
+        min-width="110"
+        align="center"
+        label="回复内容">
+      </el-table-column>
+      <el-table-column
+        prop="thumb_count"
+        :formatter="defaultNum"
+        min-width="110"
+        align="center"
+        label="点赞数">
+      </el-table-column>
+      <el-table-column
+        min-width="110"
+        align="center"
+        label="操作">
+        <template scope="scope">
+          <el-button size="small" :data-content="scope.row" @click.native.prevent="deleteHandler(scope.$index, programReply)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-table
+      key="shopTable"
+      v-if="activeIndex == 3"
+      v-loading="isLoading"
+      element-loading-text="拼命加载中"
+      :data="shopLog"
+      style="width: 100%;"
+      border>
+      <el-table-column
+        prop="paid_time"
+        min-width="110"
+        align="center"
+        label="支付时间">
+      </el-table-column>
+      <el-table-column
+        prop="entity_id"
+        min-width="110"
+        align="center"
+        label="专辑ID">
+      </el-table-column>
+      <el-table-column
+        prop="id"
+        min-width="110"
+        align="center"
+        label="商品ID">
+      </el-table-column>
+      <el-table-column
+        prop=""
+        min-width="110"
+        align="center"
+        label="商品名称">
+      </el-table-column>
+      <el-table-column
+        prop=""
+        min-width="110"
+        align="center"
+        label="支付方式">
+      </el-table-column>
+      <el-table-column
+        prop=""
+        min-width="110"
+        align="center"
+        label="原价">
+      </el-table-column>
+      <el-table-column
+        prop="fee"
+        min-width="110"
+        align="center"
+        label="支付">
+      </el-table-column>
+    </el-table>
     <el-dialog title="删除回复" :visible.sync="isDeleting">
       <el-form label-width="120px">
         <el-form-item label="选择删除原因" prop="type">
@@ -78,6 +179,7 @@
 <script>
   import moment from 'moment'
   import api from '../../../../service/data/reply'
+  import accountAPI from '../../../../service/data/account'
   export default {
     data () {
       return {
@@ -98,7 +200,7 @@
     },
     mounted () {
       this.$nextTick(() => {
-        this.selectHandler()
+        this.selectHandler('1')
       })
     },
     watch: {
@@ -107,15 +209,28 @@
     methods: {
       fetchData (dataPromise) {
         return dataPromise.then(resp => {
-          if (resp && resp.data && resp.data.reply) {
-            this.programReply = resp.data.reply
+          if (resp) {
             this.isLoading = false
+            if (this.activeIndex === '1') {
+              this.programReply = resp.data && resp.data.reply
+            } else if (this.activeIndex === '2') {
+              this.albumReply = resp.data && resp.data.reply
+            } else {
+              this.shopLog = resp.data
+            }
           }
         })
+          .catch(err => {
+            console.error(err)
+            this.isLoading = false
+          })
       },
       selectHandler (key, path) {
         if (key) {
+          this.isLoading = true
           this.activeIndex = key
+        } else {
+          this.activeIndex = '1'
         }
         let params = {}
         this.pageNo && (params.page_no = this.pageNo)
@@ -132,6 +247,8 @@
           dataPromise = api('reply').fetch(params)
         } else {
           // Shop history
+          let mockId = '04aeeb19f3a1bc1b58b1ceab873448bd'
+          dataPromise = accountAPI('shop_list').fetch({ user_id: mockId })
         }
         return this.fetchData(dataPromise)
       },

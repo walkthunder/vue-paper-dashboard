@@ -1,5 +1,5 @@
 import API from '../apiWrapper'
-import { BACKEND_HOST, U2_HOST_TEST, U2_HOST_ONLINE } from '../../config'
+import { BACKEND_HOST, U2_HOST_TEST, U2_HOST_ONLINE, PAY_HOST_TEST } from '../../config'
 const ENTRIES = {
   managers: {
     method: 'GET',
@@ -42,6 +42,12 @@ const ENTRIES = {
     host: U2_HOST_ONLINE,
     path: '/u2/api/v4/user',
     timeout: 300
+  },
+  shop_list: {
+    method: 'GET',
+    host: PAY_HOST_TEST,
+    path: '/api/v1/subscriptions',
+    timeout: 600
   }
 }
 
