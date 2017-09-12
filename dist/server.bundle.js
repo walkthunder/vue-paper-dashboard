@@ -47209,7 +47209,7 @@ router.get('/upyun_token', function (req, res) {
 });
 
 router.get('/managers', function (req, res) {
-  _request2.default.get(_config.CMS_HOST + '/v1/admin/user', function (err, response, body) {
+  _request2.default.get(_config.CMS_HOST + '/v1/admin/user?pagesize=160', function (err, response, body) {
     if (err) {
       _winston2.default.error(err);
       res.status(200).end();
@@ -53330,7 +53330,8 @@ var BACKEND_HOST = exports.BACKEND_HOST = 'http://localhost:8011';
 var CMS_HOST = exports.CMS_HOST = process.env.CMS_HOST;
 var U2_HOST = exports.U2_HOST = 'https://u2.qingting.fm';
 var U2_HOST_TEST = exports.U2_HOST_TEST = 'http://114.215.242.136:7777';
-var DAL_HOST = exports.DAL_HOST = process.env.DAL_HOST;
+var U2_HOST_ONLINE = exports.U2_HOST_ONLINE = 'http://114.215.242.136';
+var DAL_HOST = exports.DAL_HOST = process.env.DAL_HOST;var PAY_HOST_TEST = exports.PAY_HOST_TEST = 'http://test.pay.qingting.fm';
 
 /***/ }),
 /* 500 */,
