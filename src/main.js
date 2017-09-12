@@ -4,6 +4,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 
 // Plugins
+import VueLocalStorage from 'vue-localstorage'
 import GlobalComponents from './globalComponents'
 import GlobalDirectives from './globalDirectives'
 import Notifications from './components/UIComponents/NotificationPlugin'
@@ -31,6 +32,7 @@ Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(SideBar)
 Vue.use(plugins)
+Vue.use(VueLocalStorage)
 Vue.component('qt-img', QtImage)
 
 // configure router

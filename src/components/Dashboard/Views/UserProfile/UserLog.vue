@@ -262,6 +262,7 @@
         this.isDeleting = true
         this.manager_id = this.$getUser().id
         if (!this.manager_id) {
+          this.$localStorage.set('afterLogin', this.$route.fullPath)
           this.$router.push('/login')
         }
       },

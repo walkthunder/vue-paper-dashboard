@@ -118,6 +118,7 @@
 <script>
   import api from '../../../service/data/account'
   import moment from 'moment'
+  import isEmpty from 'lodash/isEmpty'
   import ElCheckbox from '../../../../node_modules/element-ui/packages/checkbox/src/checkbox.vue'
   import ElOption from '../../../../node_modules/element-ui/packages/select/src/option.vue'
   import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
@@ -180,7 +181,11 @@
       fetchData (withoutManagers = false) {
         this.isLoading = true
         let manager = this.$getUser()
-        console.log('manager : ', manager)
+        if (isEmpty(manager)) {
+          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$router.push('/login')
+          return
+        }
         this.manager_id = manager && manager.id
         let params = {manager_id: this.manager_id}
         let managersPromise = Promise.resolve()

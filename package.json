@@ -33,6 +33,7 @@
     "superagent": "^3.6.0",
     "vue": "^2.3.0",
     "vue-clickaway": "^2.1.0",
+    "vue-localstorage": "^0.4.1",
     "vue-router": "^2.2.0",
     "winston": "^2.3.1"
   },
