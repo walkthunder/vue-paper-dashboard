@@ -66,6 +66,12 @@ const ENTRIES = {
     host: U2_HOST_TEST,
     path: '/api/v2/internal/banned_user',
     timeout: 300
+  },
+  messages: {
+    method: 'GET',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/manager_msg',
+    timeout: 300
   }
 }
 

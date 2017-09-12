@@ -15,6 +15,7 @@ import Accounts from 'src/components/Dashboard/Views/Accounts.vue'
 import Reply from 'src/components/Dashboard/Views/Reply.vue'
 import Account from 'src/components/Dashboard/Views/Account.vue'
 import BannedUser from 'src/components/Dashboard/Views/BannedUser.vue'
+import Messages from 'src/components/Dashboard/Views/Messages.vue'
 
 const routes = [
   {
@@ -81,6 +82,11 @@ const routes = [
         path: 'banned-users',
         name: '封禁用户',
         component: BannedUser
+      },
+      {
+        path: 'messages',
+        name: '消息',
+        component: Messages
       }
     ]
   },
