@@ -105,7 +105,8 @@ router.get('/upyun_token', (req, res) => {
 })
 
 router.get('/managers', (req, res) => {
-  request.get(`${CMS_HOST}/v1/admin/user`, (err, response, body) => {
+  // TODO: Add pagination
+  request.get(`${CMS_HOST}/v1/admin/user?pagesize=160`, (err, response, body) => {
     if (err) {
       winston.error(err)
       res.status(200).end()
