@@ -1,17 +1,16 @@
 const MyPlugin = {}
 MyPlugin.install = function (Vue, options) {
+  // Add user property
+  Vue.user = {}
   // get user
   Vue.prototype.$getUser = function () {
-    return this.$root.$children[0].user
+    console.log('getUser info: ', Vue.user)
+    return Vue.user
   }
   // update user
   Vue.prototype.$updateUser = function (userInfo) {
-    this.$root.$children[0].user = userInfo
-  }
-  // get user admin
-  Vue.prototype.$getManager = function () {
-    var userInfo = this.$getUser()
-    return ['admin', 'chief-editor', 'manager'].indexOf(userInfo.role) > -1
+    console.log('set user info: ', userInfo)
+    Vue.user = userInfo
   }
 }
 export default MyPlugin

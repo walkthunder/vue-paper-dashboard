@@ -3,7 +3,7 @@
     <img class="background" src="//pic.qingting.fm/goods/2016/12/11/f6839dd1fb23e4878d823660fcbd42de.jpg" alt="">
     <el-card label-position="left" class="box-card" id="login-card">
       <div slot="header">
-        CMS内容管理系统
+        用户评论管理系统
       </div>
       <el-form :model="user" label-position="left" label-width="80px">
         <el-form-item label="用户名">
@@ -33,7 +33,7 @@
     },
     created () {
       if (cache.getItem('token')) {
-        this.$router.push({name: 'overview'})
+        console.log('token existed')
       }
     },
     methods: {
