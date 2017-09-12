@@ -102,9 +102,9 @@
           <el-select v-model="editing.owners" multiple clearable placeholder="Select">
             <el-option
               v-for="manager in managers"
-              :key="manager.value"
+              :key="manager.id"
               :label="manager.nickname"
-              :value="manager.nickname"></el-option>
+              :value="manager.id"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -122,6 +122,7 @@
   import ElOption from '../../../../node_modules/element-ui/packages/select/src/option.vue'
   import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
   import PicUpload from '../../UIComponents/PicUpload.vue'
+  // TODO: [Vue warn]: <transition-group> children must be keyed: <ElTag>
   export default {
     components: {
       ElFormItem,
@@ -178,7 +179,9 @@
       },
       fetchData (withoutManagers = false) {
         this.isLoading = true
-        this.manager_id = 'wangxiaomin' // Mock data
+        let manager = this.$getUser()
+        console.log('manager : ', manager)
+        this.manager_id = manager && manager.id
         let params = {manager_id: this.manager_id}
         let managersPromise = Promise.resolve()
         if (!withoutManagers) {
@@ -253,8 +256,17 @@
         const id = target.dataset.id
         if (id) {
           this.editing = this.getAltAccountFromCurList(id)
+          if (this.editing && this.editing.owners) {
+            this.editing.owners = this.editing.owners.map(owner => {
+              for (let manager of this.managers) {
+                if (manager.nickname === owner) {
+                  return manager.id
+                }
+              }
+            })
+          }
         } else {
-          this.editing = { owners: [] } // To skip an element bug
+          this.editing = { owners: [] } // To skip an element bug TODO: Fix element bug
         }
         this.editNotNewMode = !target.dataset.new
         this.dialogFormVisible = true
