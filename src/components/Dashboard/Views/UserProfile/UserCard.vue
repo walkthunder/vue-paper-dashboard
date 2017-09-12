@@ -63,6 +63,7 @@
   </div>
 </template>
 <script>
+  import isEmpty from 'lodash/isEmpty'
   import api from '../../../../service/data/account'
   export default {
     props: ['name', 'id', 'avatar', 'description'],
@@ -107,11 +108,16 @@
         }
       },
       doBan () {
-        console.log('Ban the user')
         let params = {
-          manager_id: 'wangxiaomin',
           user_id: this.id
         }
+        let manager = this.$getUser()
+        if (isEmpty(manager)) {
+          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$router.push('/login')
+          return
+        }
+        params.manager_id = manager.id
         let reason = this.bannedReason.join('_') + '_' + this.bannedReasonElse
         params.reason = reason
         if (!this.bannedEver) {
@@ -119,7 +125,6 @@
         }
         return api('ban').fetch(params)
           .then(resp => {
-            console.log('ban result resp : ', resp)
             this.isBanning = false
             this.$message.success('封禁用户成功')
           })

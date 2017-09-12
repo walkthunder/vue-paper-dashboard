@@ -85,6 +85,7 @@
 </template>
 <script>
   import api from '../../../service/data/account'
+  import isEmpty from 'lodash/isEmpty'
   import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
   export default {
     components: {ElFormItem},
@@ -108,12 +109,19 @@
       unban (index, list) {
         console.log(' 解禁 ', list[index])
         let params = {
-          manager_id: 'wangxiaomin',
           user_id: list[index].user_id
         }
+        let manager = this.$getUser()
+        if (isEmpty(manager)) {
+          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$router.push('/login')
+          return
+        }
+        params.manager_id = manager.id
         return api('unban').fetch(params)
           .then(resp => {
             this.$message.success('解禁用户成功')
+            this.fetchData()
           })
       },
       fetchData () {
