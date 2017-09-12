@@ -184,6 +184,7 @@
 </template>
 
 <script>
+  import isEmpty from 'lodash/isEmpty'
   import api from '../../../service/data/reply'
   import accountsAPI from '../../../service/data/account'
   import moment from 'moment'
@@ -196,7 +197,7 @@
       ElButton},
     data () {
       return {
-        manager_id: 'wangxiaomin', // Mock data
+        manager_id: '',
         isAnswering: false,
         answerContent: {},
         answerTime: '',
@@ -251,7 +252,17 @@
         this.date_range = [beginTime, endTime]
         return this.date_range
       },
+      confirmManager () {
+        let manager = this.$getUser()
+        if (isEmpty(manager)) {
+          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$router.push('/login')
+          return
+        }
+        this.manager_id = manager.id
+      },
       fetchData (withoutCategory = false) {
+        this.confirmManager()
         this.mContentLoading = true
         let params = {}
         this.pageNo && (params.page_no = this.pageNo)
@@ -351,7 +362,7 @@
         console.log('ready to delete content: ', this.deleteId)
       },
       getAccounts () {
-        let params = {manager_id: this.$getUser().id}
+        let params = {manager_id: this.manager_id}
         return Promise.all([accountsAPI('accounts').fetch(params), accountsAPI('random').fetch({})])
           .then(([resp, random]) => {
             // The first one should be default option
@@ -362,6 +373,9 @@
         console.log(' Account selected: ', this.useAccountId)
       },
       answer () {
+        if (!this.manager_id) {
+          this.confirmManager()
+        }
         let params = {
           manager_id: this.manager_id,
           user_id: this.useAccountId || this.accounts[0].alt_id,
@@ -390,6 +404,9 @@
           reasons.push(this.deleteReasonElse)
         }
         console.log('Do delete', reasons)
+        if (!this.manager_id) {
+          this.confirmManager()
+        }
         let params = {
           manager_id: this.manager_id,
           reply_id: this.deleteId,
