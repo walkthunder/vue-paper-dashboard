@@ -345,6 +345,7 @@
           })
       },
       answerHandler (index, rows) {
+        this.confirmManager()
         this.isAnswering = true
         let content = rows[index]
         this.answerContent = content
@@ -356,6 +357,7 @@
           })
       },
       deleteHandler (index, rows) {
+        this.confirmManager()
         this.isDeleting = true
         let content = rows[index]
         this.deleteId = content._id
