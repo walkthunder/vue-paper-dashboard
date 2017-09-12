@@ -21,8 +21,7 @@
       </div>
     </div>
     <div class="row" id="submodule">
-      <user-log>
-
+      <user-log :userId="this.userid">
       </user-log>
     </div>
   </div>

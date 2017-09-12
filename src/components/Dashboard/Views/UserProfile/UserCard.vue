@@ -5,7 +5,9 @@
     </div>
     <div class="content">
       <div class="author">
-        <img class="avatar border-white" :src="this.avatar" alt="...">
+        <img class="avatar border-white"
+             :src="this.avatar || '//qingtingtest.oss-cn-hangzhou.aliyuncs.com/msg_center/%E8%9C%BB%E8%9C%93%E5%B0%8F%E7%AE%A1%E5%AE%B6%E5%A4%B4%E5%83%8F.jpeg'"
+             alt="...">
         <h4 class="title">{{this.name}}
           <br>
           <a href="#">

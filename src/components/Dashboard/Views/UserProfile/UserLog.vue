@@ -181,16 +181,16 @@
   import api from '../../../../service/data/reply'
   import accountAPI from '../../../../service/data/account'
   export default {
+    props: ['userId'],
     data () {
       return {
-        manager_id: 'wangxiaomin',
+        manager_id: this.$getUser().id,
         isLoading: true,
         isDeleting: false,
         deleteReason: [],
         deleteReasonElse: '',
         activeIndex: '1',
         reply_type: 'PROGRAM',
-        userId: '',
         pageNo: 1,
         pageSize: 20,
         programReply: [],
@@ -247,8 +247,7 @@
           dataPromise = api('reply').fetch(params)
         } else {
           // Shop history
-          let mockId = '04aeeb19f3a1bc1b58b1ceab873448bd'
-          dataPromise = accountAPI('shop_list').fetch({ user_id: mockId })
+          dataPromise = accountAPI('shop_list').fetch({ user_id: this.userId })
         }
         return this.fetchData(dataPromise)
       },
@@ -260,8 +259,11 @@
       },
       deleteHandler (index, contents) {
         this.deleteId = contents[index]._id
-        // TODO: Get manager info
         this.isDeleting = true
+        this.manager_id = this.$getUser().id
+        if (!this.manager_id) {
+          this.$router.push('/login')
+        }
       },
       doDel () {
         let reasons = this.deleteReason

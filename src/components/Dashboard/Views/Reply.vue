@@ -60,6 +60,14 @@
         min-width="110"
         align="center"
         label="用户名">
+        <template scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click.native.prevent="gotoAccount(scope.$index, contents)">
+            {{scope.row.user_name}}
+          </el-button>
+        </template>
       </el-table-column>
       <el-table-column
         prop="create_time"
@@ -405,6 +413,10 @@
         this.deleteReasonElse = ''
         this.deleteId = ''
         this.isDeleting = false
+      },
+      gotoAccount (index, contents) {
+        console.log('go to account: ', contents[index].user_id)
+        this.$router.push(`/account/${contents[index].user_id}`)
       }
     }
   }
