@@ -239,7 +239,7 @@
       },
       resetDateRange () {
         let beginTime = moment().subtract(7, 'days')
-        let endTime = moment()
+        let endTime = moment().add(1, 'hours')
         this.date_range = [beginTime, endTime]
         return this.date_range
       },
@@ -270,36 +270,13 @@
           .then(([resp, reply]) => {
             let replies = reply.data.reply || []
             this.mTotal = reply.data.total
-            if (!replies || replies.length === 0) {
-              // TODO: Remove mock data
-              replies.push({
-                user_avatar: 'http://q.qlogo.cn/qqapp/100387802/9229501C45EACC8CAC95C4BFC31BF782/40',
-                podcaster: [
-                  '4e44a2268f9901d970d49f6206f20f7a'
-                ],
-                content: '周建龙说得不错',
-                create_time: 1468552833.759241,
-                topic_id: '56c9c09e8679506255c19302',
-                user_id: 'e14381b56d5b357d76c5c1f83b4d610a',
-                _id: '57885681066afb3c908435f7',
-                user_name: '零下℃',
-                program_name: '矮大紧指北',
-                thumb_count: 1,
-                reply_to: {
-                  content: '挺好的，刚听完一个800多集的，来听这个。',
-                  user_name: '@无处安放',
-                  user_id: 'aabb905172ce375ee325321e839b785c',
-                  id: '58c3edc5066afb5c517c9b4e'
-                }
-              })
-            }
             this.contents = replies
             if (!withoutCategory) {
-              this.categories = [ ...resp.data, {
+              this.categories = [{
                 id: 0,
                 name: '全部',
                 status: 99
-              }]
+              }, ...resp.data]
             }
           })
           .then(() => {
@@ -366,11 +343,9 @@
         console.log('ready to delete content: ', this.deleteId)
       },
       getAccounts () {
-        let params = {manager_id: 'wangxiaomin'}
+        let params = {manager_id: this.$getUser().id}
         return Promise.all([accountsAPI('accounts').fetch(params), accountsAPI('random').fetch({})])
           .then(([resp, random]) => {
-            console.log('accounts get: ', resp.data)
-            console.log('random resp: ', random.data)
             // The first one should be default option
             return [ random.data, ...resp.data.alt_accounts ]
           })
@@ -389,12 +364,12 @@
         if (this.answerTime) {
           params.reply_time = this.answerTime
         }
-        console.log('answer params: ', params)
         api('answer').fetch({}, { ...params })
           .then(resp => {
-            console.log('reply to reply: ', resp)
             this.isAnswering = false
             this.$message.success('回复成功')
+            this.resetDateRange()
+            this.fetchData()
           })
           .catch(err => {
             console.error(err)
