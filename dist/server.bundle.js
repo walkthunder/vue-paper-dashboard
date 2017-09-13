@@ -47170,13 +47170,12 @@ router.get('/jwt', function (req, res) {
       var data = JSON.parse(result);
       if (data.data && data.data.user_id) {
         var id = data.data.user_id;
+        var name = data.data.username;
         var jwtToken = _jsonwebtoken2.default.sign({
           sub: id,
           admin: true
-        }, '4922aaae207ec67ed28cec90125035ed', {
-          expiresIn: '1h'
-        });
-        return res.status(200).send({ data: { id: id, token: jwtToken }, errorno: 0, errormsg: '' });
+        }, '4922aaae207ec67ed28cec90125035ed');
+        return res.status(200).send({ data: { id: id, name: name, token: jwtToken }, errorno: 0, errormsg: '' });
       }
     }
     _winston2.default.error('CMS backend returned negative data');
