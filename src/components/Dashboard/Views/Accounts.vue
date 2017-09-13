@@ -99,7 +99,7 @@
           <el-checkbox v-model="editing.official"></el-checkbox>
         </el-form-item>
         <el-form-item label="所属小编" :label-width="formLabelWidth">
-          <el-select v-model="editing.owners" multiple clearable placeholder="Select">
+          <el-select v-model="editing.owners" multiple clearable placeholder="Select" @change="onSelect">
             <el-option
               v-for="manager in managers"
               :key="manager.id"
@@ -144,7 +144,8 @@
           alt_name: '',
           alt_avatar: '',
           official: false,
-          owners: []
+          owners: [],
+          ownerIds: []
         },
         total: 0,
         current: 1,
@@ -255,6 +256,17 @@
       handleCurrentChange () {
         this.fetchData()
       },
+      _matchManagerIdWithName (name) {
+        if (this.managers) {
+          for (let index = 0; index < this.managers.length; index++) {
+            let manager = this.managers[index]
+            if (manager.nickname === name) {
+              return manager.id
+            }
+          }
+        }
+        return undefined
+      },
       editBtnHandler (e) {
         let target = e.target
         if (target.firstElementChild === null) {
@@ -264,13 +276,7 @@
         if (id) {
           this.editing = this.getAltAccountFromCurList(id)
           if (this.editing && this.editing.owners) {
-            this.editing.owners = this.editing.owners.map(owner => {
-              for (let manager of this.managers) {
-                if (manager.nickname === owner) {
-                  return manager.id
-                }
-              }
-            })
+            this.editing.ownerIds = this.editing.owners.map(owner => this._matchManagerIdWithName(owner))
           }
         } else {
           this.editing = { owners: [] } // To skip an element bug TODO: Fix element bug
@@ -278,11 +284,17 @@
         this.editNotNewMode = !target.dataset.new
         this.dialogFormVisible = true
       },
+      onSelect (val) {
+        console.log('sync managers: ', val)
+        if (this.editing && this.editing.owners) {
+          this.editing.ownerIds = this.editing.owners.map(owner => this._matchManagerIdWithName(owner))
+        }
+      },
       confirmHandler (e) {
         let token = cache.getItem('token')
         let params = { ...this.editing, manager_id: this.manager_id, token }
-        if (params.owners) {
-          params.owners = params.owners.join('_')
+        if (params.ownerIds) {
+          params.owners = params.ownerIds.join('_')
         }
         let requestPromise
         if (!this.editNotNewMode) { // New account
