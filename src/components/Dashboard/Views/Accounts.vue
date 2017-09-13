@@ -123,6 +123,7 @@
   import ElOption from '../../../../node_modules/element-ui/packages/select/src/option.vue'
   import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
   import PicUpload from '../../UIComponents/PicUpload.vue'
+  import cache from '../../../service/cache'
   // TODO: [Vue warn]: <transition-group> children must be keyed: <ElTag>
   export default {
     components: {
@@ -188,11 +189,12 @@
         }
         this.manager_id = manager && manager.id
         let params = {manager_id: this.manager_id}
+        let token = cache.getItem('token')
         let managersPromise = Promise.resolve()
         if (!withoutManagers) {
-          managersPromise = api('managers').fetch({})
+          managersPromise = api('managers').fetch({}, {params: {token}})
         }
-        return Promise.all([api('accounts').fetch(params), managersPromise])
+        return Promise.all([api('accounts').fetch(params, {params: {token}}), managersPromise])
           .then(([response, managersResp]) => {
             this.isLoading = false
             if (response.data) {
@@ -277,7 +279,8 @@
         this.dialogFormVisible = true
       },
       confirmHandler (e) {
-        let params = { ...this.editing, manager_id: this.manager_id }
+        let token = cache.getItem('token')
+        let params = { ...this.editing, manager_id: this.manager_id, token }
         if (params.owners) {
           params.owners = params.owners.join('_')
         }

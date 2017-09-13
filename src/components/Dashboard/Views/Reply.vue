@@ -190,13 +190,14 @@
   import moment from 'moment'
   import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue'
   import ElDialog from '../../../../node_modules/element-ui/packages/dialog/src/component.vue'
-
+  import cache from '../../../service/cache'
   export default {
     components: {
       ElDialog,
       ElButton},
     data () {
       return {
+        token: '',
         manager_id: '',
         isAnswering: false,
         answerContent: {},
@@ -281,12 +282,14 @@
         if (this.mCategoryId) {
           params.category = this.mCategoryId
         }
+        this.token = cache.getItem('token')
         let catPromise = Promise.resolve()
         if (!withoutCategory) {
-          catPromise = api('categories').fetch({})
+          catPromise = api('categories').fetch({}, {params: {token: this.token}})
         }
-        return Promise.all([catPromise, api('reply').fetch(params)])
+        return Promise.all([catPromise, api('reply').fetch(params, {params: {token: this.token}})])
           .then(([resp, reply]) => {
+            this.mContentLoading = false
             let replies = reply.data.reply || []
             this.mTotal = reply.data.total
             this.contents = replies
@@ -298,7 +301,8 @@
               }, ...resp.data]
             }
           })
-          .then(() => {
+          .catch(err => {
+            console.error(err)
             this.mContentLoading = false
           })
       },
@@ -364,8 +368,9 @@
         console.log('ready to delete content: ', this.deleteId)
       },
       getAccounts () {
+        this.token = cache.getItem('token')
         let params = {manager_id: this.manager_id}
-        return Promise.all([accountsAPI('accounts').fetch(params), accountsAPI('random').fetch({})])
+        return Promise.all([accountsAPI('accounts').fetch(params, {token: this.token}), accountsAPI('random').fetch({}, {token: this.token})])
           .then(([resp, random]) => {
             // The first one should be default option
             return [ random.data, ...resp.data.alt_accounts ]
@@ -378,12 +383,14 @@
         if (!this.manager_id) {
           this.confirmManager()
         }
+        this.token = cache.getItem('token')
         let params = {
           manager_id: this.manager_id,
           user_id: this.useAccountId || this.accounts[0].alt_id,
           topic_id: this.answerContent.topic_id,
           reply_to: this.answerContent.reply_to.id,
-          content: this.answerText
+          content: this.answerText,
+          token: this.token
         }
         if (this.answerTime) {
           params.reply_time = this.answerTime
@@ -409,10 +416,12 @@
         if (!this.manager_id) {
           this.confirmManager()
         }
+        this.token = cache.getItem('token')
         let params = {
           manager_id: this.manager_id,
           reply_id: this.deleteId,
-          reason: reasons.join('_')
+          reason: reasons.join('_'),
+          token: this.token
         }
         api('delete').fetch({}, params)
           .then(resp => {

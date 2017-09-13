@@ -31,6 +31,7 @@
   import UserCard from './UserProfile/UserCard.vue'
   import UserLog from './UserProfile/UserLog.vue'
   import api from '../../../service/data/account'
+  import cache from '../../../service/cache'
   export default {
     components: {
       EditProfileForm,
@@ -65,7 +66,8 @@
     methods: {
       fetchData () {
         let tags = { 's_T_A_T_I_C': this.userid }
-        api('account').fetch(tags)
+        let token = cache.getItem('token')
+        api('account').fetch(tags, {token})
           .then(account => {
             console.log('account data: ', account.data)
             let accountData = account.data

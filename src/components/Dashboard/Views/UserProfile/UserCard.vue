@@ -65,6 +65,7 @@
 <script>
   import isEmpty from 'lodash/isEmpty'
   import api from '../../../../service/data/account'
+  import cache from '../../../../service/cache'
   export default {
     props: ['name', 'id', 'avatar', 'description'],
     data () {
@@ -117,13 +118,14 @@
           this.$router.push('/login')
           return
         }
+        let token = cache.getItem('token')
         params.manager_id = manager.id
         let reason = this.bannedReason.join('_') + '_' + this.bannedReasonElse
         params.reason = reason
         if (!this.bannedEver) {
           params.unbanned_time = this.until
         }
-        return api('ban').fetch(params)
+        return api('ban').fetch(params, {token})
           .then(resp => {
             this.isBanning = false
             this.$message.success('封禁用户成功')

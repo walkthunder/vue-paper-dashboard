@@ -87,10 +87,13 @@
   import api from '../../../service/data/account'
   import isEmpty from 'lodash/isEmpty'
   import ElFormItem from '../../../../node_modules/element-ui/packages/form/src/form-item.vue'
+  import cache from '../../../service/cache'
   export default {
     components: {ElFormItem},
     data () {
       return {
+        token: '',
+        manager_id: '',
         isLoading: true,
         userId: '',
         userName: '',
@@ -106,19 +109,24 @@
       })
     },
     methods: {
-      unban (index, list) {
-        console.log(' 解禁 ', list[index])
-        let params = {
-          user_id: list[index].user_id
-        }
+      confirmLogged () {
         let manager = this.$getUser()
         if (isEmpty(manager)) {
           this.$localStorage.set('afterLogin', this.$route.fullPath)
           this.$router.push('/login')
           return
         }
-        params.manager_id = manager.id
-        return api('unban').fetch(params)
+        this.manager_id = manager.id
+      },
+      unban (index, list) {
+        console.log(' 解禁 ', list[index])
+        let params = {
+          user_id: list[index].user_id
+        }
+        this.confirmLogged()
+        this.token = cache.getItem('token')
+        params.manager_id = this.manager_id
+        return api('unban').fetch(params, {token: this.token})
           .then(resp => {
             this.$message.success('解禁用户成功')
             this.fetchData()
@@ -136,7 +144,9 @@
         if (this.userName) {
           params.user_name = this.userName
         }
-        return api('banned_list').fetch(params)
+        this.confirmLogged()
+        this.token = cache.getItem('token')
+        return api('banned_list').fetch(params, {token: this.token})
           .then(resp => {
             this.isLoading = false
             console.log('fetch list: ', resp)

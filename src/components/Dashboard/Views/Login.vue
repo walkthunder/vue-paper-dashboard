@@ -55,8 +55,8 @@
             // Redirect to dashboard if succeeded
             console.log(res)
             if (res && res.data) {
-              cache.setItem('token', res.data.toString())
-              this.$updateUser({ id: res.data })
+              cache.setItem('token', res.data.token)
+              this.$updateUser({ id: res.data.id })
               this.$message({
                 message: '登录成功',
                 type: 'success'

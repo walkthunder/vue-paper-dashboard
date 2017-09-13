@@ -180,6 +180,7 @@
   import moment from 'moment'
   import api from '../../../../service/data/reply'
   import accountAPI from '../../../../service/data/account'
+  import cache from '../../../../service/cache'
   export default {
     props: ['userId'],
     data () {
@@ -207,6 +208,13 @@
       '$route': 'selectHandler'
     },
     methods: {
+      confirmLogged () {
+        this.manager_id = this.$getUser().id
+        if (!this.manager_id) {
+          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$router.push('/login')
+        }
+      },
       fetchData (dataPromise) {
         return dataPromise.then(resp => {
           if (resp) {
@@ -226,12 +234,14 @@
           })
       },
       selectHandler (key, path) {
+        this.confirmLogged()
         if (key) {
           this.isLoading = true
           this.activeIndex = key
         } else {
           this.activeIndex = '1'
         }
+        let token = cache.getItem('token')
         let params = {}
         this.pageNo && (params.page_no = this.pageNo)
         this.pageSize && (params.page_size = this.pageSize)
@@ -240,14 +250,14 @@
         if (this.activeIndex.toString() === '1') {
           this.reply_type = 'PROGRAM'
           params.reply_type = this.reply_type
-          dataPromise = api('reply').fetch(params)
+          dataPromise = api('reply').fetch(params, {token})
         } else if (this.activeIndex.toString() === '2') {
           this.reply_type = 'ALBUM'
           params.reply_type = this.reply_type
-          dataPromise = api('reply').fetch(params)
+          dataPromise = api('reply').fetch(params, {token})
         } else {
           // Shop history
-          dataPromise = accountAPI('shop_list').fetch({ user_id: this.userId })
+          dataPromise = accountAPI('shop_list').fetch({ user_id: this.userId }, {token})
         }
         return this.fetchData(dataPromise)
       },
@@ -267,14 +277,17 @@
         }
       },
       doDel () {
+        this.confirmLogged()
         let reasons = this.deleteReason
         if (this.deleteReasonElse) {
           reasons.push(this.deleteReasonElse)
         }
+        let token = cache.getItem('token')
         let params = {
           manager_id: this.manager_id,
           reply_id: this.deleteId,
-          reason: reasons.join('_')
+          reason: reasons.join('_'),
+          token
         }
         api('delete').fetch({}, params)
           .then(resp => {
