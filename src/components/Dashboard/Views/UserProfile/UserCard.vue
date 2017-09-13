@@ -22,7 +22,7 @@
     <div class="text-center">
       <div class="row">
         <div v-for="(info, index) in details" :class="getClasses(index)" @click="showBan">
-          <el-button type="primary" :icon="info.icon"></el-button>
+          <el-button type="primary" :icon="info.icon" :disabled="info.disabled"></el-button>
           <h5>
             <small>{{info.subTitle}}</small>
           </h5>
@@ -78,17 +78,20 @@
           {
             key: 'ban',
             icon: 'delete',
-            subTitle: '封禁'
+            subTitle: '封禁',
+            disabled: false
           },
           {
             key: 'avatar',
             icon: 'edit',
-            subTitle: '清空头像'
+            subTitle: '清空头像',
+            disabled: true
           },
           {
             key: 'nick',
             icon: 'edit',
-            subTitle: '清空昵称'
+            subTitle: '清空昵称',
+            disabled: true
           }
         ]
       }
