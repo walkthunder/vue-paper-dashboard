@@ -47173,9 +47173,10 @@ router.get('/jwt', function (req, res) {
         var jwtToken = _jsonwebtoken2.default.sign({
           sub: id,
           admin: true
-        }, _nodeUuid2.default.v4());
-        res.cookie('jwt', jwtToken);
-        return res.status(200).send({ data: id, errorno: 0, errormsg: '' });
+        }, '4922aaae207ec67ed28cec90125035ed', {
+          expiresIn: '1h'
+        });
+        return res.status(200).send({ data: { id: id, token: jwtToken }, errorno: 0, errormsg: '' });
       }
     }
     _winston2.default.error('CMS backend returned negative data');
@@ -47214,7 +47215,7 @@ router.get('/managers', function (req, res) {
       _winston2.default.error(err);
       res.status(200).end();
     } else {
-      _winston2.default.log(body);
+      console.log(body);
       res.status(200).json(JSON.parse(body));
     }
   });
@@ -53254,6 +53255,7 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   }
+  res.header('Access-Control-Allow-Headers', 'token');
   if (req.method === 'OPTIONS') {
     res.status(200).end();
   } else {
