@@ -65,11 +65,12 @@ router.get('/jwt', (req, res) => {
         const data = JSON.parse(result)
         if (data.data && data.data.user_id) {
           const id = data.data.user_id
+          const name = data.data.username
           const jwtToken = JWT.sign({
             sub: id,
             admin: true
           }, '4922aaae207ec67ed28cec90125035ed') // TODO: Move to env config
-          return res.status(200).send({ data: {id, token: jwtToken}, errorno: 0, errormsg: '' })
+          return res.status(200).send({ data: {id, name, token: jwtToken}, errorno: 0, errormsg: '' })
         }
       }
       winston.error('CMS backend returned negative data')

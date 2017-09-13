@@ -1,6 +1,18 @@
 <template>
   <nav class="navbar navbar-default">
     <div class="container-fluid">
+      <el-popover
+        ref="popoverManager"
+        placement="top"
+        width="220"
+        v-model="showManager">
+        <p>Manager Info</p>
+        <p>ID: {{this.userId}}</p>
+        <p>NAME: {{this.userName}}</p>
+        <div style="text-align: center; margin: 0">
+          <el-button type="primary" size="mini" @click="logout">注销</el-button>
+        </div>
+      </el-popover>
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" :class="{toggled: $sidebar.showSidebar}" @click="toggleSidebar">
           <span class="sr-only">Toggle navigation</span>
@@ -12,25 +24,9 @@
       </div>
       <div class="navbar-right-menu">
         <ul class="nav navbar-nav navbar-right">
-          <li class="open">
-            <a href="#" class="dropdown-toggle btn-magnify" data-toggle="dropdown">
-              <i class="ti-panel"></i>
-              <p>Stats</p>
-            </a>
-          </li>
-             <drop-down title="5 Notifications" icon="ti-bell">
-               <li><a href="#">Notification 1</a></li>
-               <li><a href="#">Notification 2</a></li>
-               <li><a href="#">Notification 3</a></li>
-               <li><a href="#">Notification 4</a></li>
-               <li><a href="#">Another notification</a></li>
-             </drop-down>
           <li>
             <a href="#" class="btn-rotate">
-              <i class="ti-settings"></i>
-              <p>
-                Settings
-              </p>
+              <el-button class="el-icon-setting" type="text" v-popover:popoverManager>管理员</el-button>
             </a>
           </li>
         </ul>
@@ -39,19 +35,39 @@
   </nav>
 </template>
 <script>
+  import ElPopover from '../../../../node_modules/element-ui/packages/popover/src/main.vue'
+  import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue'
+  import cache from '../../../service/cache'
   export default {
+    components: {
+      ElButton,
+      ElPopover},
     computed: {
       routeName () {
         const {name} = this.$route
         return this.capitalizeFirstLetter(name)
       }
     },
+    watch: {
+      '$route': 'refreshInfo'
+    },
     data () {
       return {
+        userId: '',
+        userName: '',
+        showManager: false,
         activeNotifications: false
       }
     },
     methods: {
+      refreshInfo () {
+        let manager = this.$getUser()
+        console.log('refreshInfo', manager)
+        if (manager) {
+          this.userId = manager.id
+          this.userName = manager.name
+        }
+      },
       capitalizeFirstLetter (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       },
@@ -66,6 +82,12 @@
       },
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
+      },
+      logout () {
+        console.log('logout')
+        this.$removeUser()
+        cache.removeItem('token')
+        this.$message.success('注销成功')
       }
     }
   }

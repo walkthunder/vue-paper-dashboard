@@ -12,5 +12,8 @@ MyPlugin.install = function (Vue, options) {
     console.log('set user info: ', userInfo)
     Vue.user = userInfo
   }
+  Vue.prototype.$removeUser = function () {
+    Vue.user = {}
+  }
 }
 export default MyPlugin

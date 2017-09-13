@@ -56,7 +56,7 @@
             console.log(res)
             if (res && res.data) {
               cache.setItem('token', res.data.token)
-              this.$updateUser({ id: res.data.id })
+              this.$updateUser({ id: res.data.id, name: res.data.name })
               this.$message({
                 message: '登录成功',
                 type: 'success'
