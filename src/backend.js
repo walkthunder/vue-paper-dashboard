@@ -68,9 +68,8 @@ router.get('/jwt', (req, res) => {
           const jwtToken = JWT.sign({
             sub: id,
             admin: true
-          }, UUID.v4())
-          res.cookie('jwt', jwtToken)
-          return res.status(200).send({ data: id, errorno: 0, errormsg: '' })
+          }, '4922aaae207ec67ed28cec90125035ed') // TODO: Move to env config
+          return res.status(200).send({ data: {id, token: jwtToken}, errorno: 0, errormsg: '' })
         }
       }
       winston.error('CMS backend returned negative data')
@@ -111,7 +110,7 @@ router.get('/managers', (req, res) => {
       winston.error(err)
       res.status(200).end()
     } else {
-      winston.log(body)
+      console.log(body)
       res.status(200).json(JSON.parse(body))
     }
   })
