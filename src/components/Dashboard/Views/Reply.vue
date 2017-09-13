@@ -88,6 +88,14 @@
         min-width="110"
         align="center"
         label="引用用户">
+        <template scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click.native.prevent="gotoUserAccount(scope.$index, contents)">
+            {{scope.row.reply_to.user_name}}
+          </el-button>
+        </template>
       </el-table-column>
       <el-table-column
         prop="reply_to.content"
@@ -445,6 +453,10 @@
       gotoAccount (index, contents) {
         console.log('go to account: ', contents[index].user_id)
         this.$router.push(`/account/${contents[index].user_id}`)
+      },
+      gotoUserAccount (index, contents) {
+        console.log('go to account: ', contents[index].reply_to)
+        this.$router.push(`/account/${contents[index].reply_to.user_id}`)
       }
     }
   }
