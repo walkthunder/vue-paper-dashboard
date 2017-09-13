@@ -62,6 +62,11 @@ const SidebarStore = {
       name: 'BannedUsers',
       icon: 'ti-na',
       path: '/banned-users'
+    },
+    {
+      name: 'Messages',
+      icon: 'ti-email',
+      path: '/messages'
     }
   ],
   displaySidebar (value) {

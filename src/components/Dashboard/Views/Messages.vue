@@ -1,5 +1,40 @@
 <template>
   <div>
+    <el-row>
+      <el-col :span="5">
+        <el-date-picker
+          placeholder="回复时间"
+          v-model="date_range"
+          type="daterange"
+          align="center"
+          style="width: 220px">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="5">
+        <el-input
+          placeholder="用户名"
+          v-model="mUserName" style="width: 220px">
+        </el-input>
+      </el-col>
+      <el-col :span="5">
+        <el-input
+          placeholder="用户ID"
+          v-model="mUserId" style="width: 220px">
+        </el-input>
+      </el-col>
+      <el-col :span="5">
+        <el-input
+          placeholder="专辑名"
+          v-model="mAlbumName" style="width: 220px">
+        </el-input>
+      </el-col>
+      <el-col :span="4">
+        <el-button type="primary" icon="search" @click="search">查询</el-button>
+      </el-col>
+      <el-col :offset="6" :span="6">
+      </el-col>
+    </el-row>
+    <br>
     <el-table
       fit
       v-loading="isLoading"
@@ -126,10 +161,14 @@
   import isEmpty from 'lodash/isEmpty'
   import api from '../../../service/data/reply'
   import accountsAPI from '../../../service/data/account'
-
+  import cache from '../../../service/cache'
   export default {
     data () {
       return {
+        mDateRange: '',
+        mUserName: '',
+        mUserId: '',
+        mAlbumName: '',
         total: 0,
         pageNo: 1,
         pageSize: 20,
@@ -146,10 +185,13 @@
         deleteId: '',
         deleteReason: [],
         deleteReasonElse: '',
-        date_range: ''
+        date_range: []
       }
     },
     mounted () {
+      let beginTime = moment().subtract(7, 'days')
+      let endTime = moment()
+      this.date_range = [beginTime, endTime]
       this.$nextTick(() => {
         this.fetchData()
       })
@@ -168,8 +210,10 @@
         this.manager_id = manager.id
       },
       getAccounts () {
+        this.confirmManager()
+        let token = cache.getItem('token')
         let params = {manager_id: this.manager_id}
-        return Promise.all([accountsAPI('accounts').fetch(params), accountsAPI('random').fetch({})])
+        return Promise.all([accountsAPI('accounts').fetch(params, {token}), accountsAPI('random').fetch({}, {token})])
           .then(([resp, random]) => {
             // The first one should be default option
             return [ random.data, ...resp.data.alt_accounts ]
@@ -177,7 +221,26 @@
       },
       fetchData () {
         this.confirmManager()
-        return accountsAPI('messages').fetch({ manager_id: this.manager_id })
+        let token = cache.getItem('token')
+        let params = { manager_id: this.manager_id }
+        if (this.mUserName) {
+          params.user_name = this.mUserName
+        }
+        if (this.mUserId) {
+          params.user_id = this.mUserId
+        }
+        if (this.mAlbumName) {
+          params.album_name = this.mAlbumName
+        }
+        if (this.date_range && this.date_range[0] && this.date_range[1]) {
+          params.begin_time = Math.floor(moment(this.date_range[0]).valueOf() / 1000)
+          params.end_time = Math.floor(moment(this.date_range[1]).valueOf() / 1000)
+        } else {
+          let [begin, end] = this.resetDateRange()
+          params.begin_time = Math.floor(moment(begin).valueOf() / 1000)
+          params.end_time = Math.floor(moment(end).valueOf() / 1000)
+        }
+        return accountsAPI('messages').fetch(params, {token})
           .then(resp => {
             this.isLoading = false
             console.log('messages resp: ', resp)
@@ -226,12 +289,14 @@
       },
       answer () {
         this.confirmManager()
+        let token = cache.getItem('token')
         let params = {
           manager_id: this.manager_id,
           user_id: this.useAccountId || this.accounts[0].alt_id,
           topic_id: this.answerContent.topic_id,
           reply_to: this.answerContent.reply_to.id,
-          content: this.answerText
+          content: this.answerText,
+          token
         }
         if (this.answerTime) {
           params.reply_time = this.answerTime
@@ -257,10 +322,12 @@
         if (!this.manager_id) {
           this.confirmManager()
         }
+        let token = cache.getItem('token')
         let params = {
           manager_id: this.manager_id,
           reply_id: this.deleteId,
-          reason: reasons.join('_')
+          reason: reasons.join('_'),
+          token
         }
         api('delete').fetch({}, params)
           .then(resp => {
@@ -280,6 +347,12 @@
         this.deleteReasonElse = ''
         this.deleteId = ''
         this.isDeleting = false
+      },
+      search (e) {
+        this.fetchData()
+          .then(resp => {
+            this.$message.success('列表更新')
+          })
       }
     }
   }
