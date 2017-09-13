@@ -16,6 +16,7 @@ import Reply from 'src/components/Dashboard/Views/Reply.vue'
 import Account from 'src/components/Dashboard/Views/Account.vue'
 import BannedUser from 'src/components/Dashboard/Views/BannedUser.vue'
 import Messages from 'src/components/Dashboard/Views/Messages.vue'
+import DeletedReply from 'src/components/Dashboard/Views/DeletedReply.vue'
 
 const routes = [
   {
@@ -87,6 +88,11 @@ const routes = [
         path: 'messages',
         name: '消息',
         component: Messages
+      },
+      {
+        path: 'deleted-reply',
+        name: '删除评论',
+        component: DeletedReply
       }
     ]
   },

@@ -24,6 +24,12 @@ const ENTRIES = {
     host: U2_HOST_TEST,
     path: '/api/v2/internal/reply',
     timeout: 300
+  },
+  deleted_reply: {
+    method: 'GET',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/deleted_reply',
+    timeout: 1000
   }
 }
 const api = new API(ENTRIES)

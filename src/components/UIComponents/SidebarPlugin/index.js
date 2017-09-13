@@ -67,6 +67,11 @@ const SidebarStore = {
       name: 'Messages',
       icon: 'ti-email',
       path: '/messages'
+    },
+    {
+      name: 'DeletedReply',
+      icon: 'ti-unlink',
+      path: '/deleted-reply'
     }
   ],
   displaySidebar (value) {
