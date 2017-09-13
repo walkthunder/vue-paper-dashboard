@@ -1,7 +1,6 @@
 <template>
   <div class="card card-user" id="user-info">
     <div class="image">
-      <img src="/static/img/background.jpg" alt="...">
     </div>
     <div class="content">
       <div class="author">

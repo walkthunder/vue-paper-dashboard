@@ -1,6 +1,5 @@
 <template>
   <div class="content is-left">
-    <h3>马甲列表</h3>
     <el-row :gutter="22">
       <el-col :span="9">
         <el-input
