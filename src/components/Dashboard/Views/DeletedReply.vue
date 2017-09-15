@@ -96,7 +96,7 @@
         align="center"
         label="操作">
         <template scope="scope">
-          <el-button size="small" :data-content="scope.row">还原</el-button>
+          <el-button size="small" :data-content="scope.row" @click.native.prevent="recover(scope.$index, list)">还原</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -246,6 +246,22 @@
         let endTime = moment().add(1, 'hours')
         this.date_range = [beginTime, endTime]
         return this.date_range
+      },
+      recover (index, list) {
+        if (list[index] && list[index]._id) {
+          let replyId = list[index]._id
+          let params = {
+            manager_id: this.manager_id,
+            reply_id: replyId,
+            token: this.token
+          }
+          return api('recover_reply').fetch({}, params)
+            .then(resp => {
+              console.log('reply recovered: ', resp)
+              this.$message.success('还原操作成功')
+              this.fetchData()
+            })
+        }
       }
     }
   }

@@ -30,6 +30,12 @@ const ENTRIES = {
     host: U2_HOST_TEST,
     path: '/api/v2/internal/deleted_reply',
     timeout: 1000
+  },
+  recover_reply: {
+    method: 'POST',
+    host: U2_HOST_TEST,
+    path: '/api/v2/internal/recover_reply',
+    timeout: 300
   }
 }
 const api = new API(ENTRIES)
