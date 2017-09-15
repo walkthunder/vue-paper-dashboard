@@ -6,11 +6,11 @@
         placement="top"
         width="220"
         v-model="showManager">
-        <p>Manager Info</p>
-        <p>ID: {{this.userId}}</p>
-        <p>NAME: {{this.userName}}</p>
+        <p class="info-header">Manager Info</p>
+        <p><span class="info-key">ID:</span><span class="info-val">{{this.userId}}</span></p>
+        <p><span class="info-key">NAME:</span><span class="info-val">{{this.userName}}</span></p>
         <div style="text-align: center; margin: 0">
-          <el-button type="primary" size="mini" @click="logout">注销</el-button>
+          <el-button type="primary" size="small" @click="logout">注销</el-button>
         </div>
       </el-popover>
       <div class="navbar-header">
@@ -87,6 +87,7 @@
         console.log('logout')
         this.$removeUser()
         cache.removeItem('token')
+        this.$router.push('/login')
         this.$message.success('注销成功')
       }
     }
@@ -94,5 +95,17 @@
 
 </script>
 <style>
-
+  .info-header {
+    display: block;
+    font-size: large;
+    padding: 5px 0 10px;
+    border-bottom: 1px solid grey;
+  }
+  .info-key {
+    display: inline-block;
+    width: 60px;
+  }
+  .info-val {
+    display: inline-block;
+  }
 </style>
