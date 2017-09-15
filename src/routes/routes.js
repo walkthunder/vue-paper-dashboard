@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/',
     component: DashboardLayout,
-    redirect: '/overview',
+    redirect: '/messages',
     children: [
       {
         path: 'overview',

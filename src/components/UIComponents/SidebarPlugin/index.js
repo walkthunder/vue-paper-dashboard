@@ -14,11 +14,6 @@ const SidebarStore = {
       path: '/reply'
     },
     {
-      name: 'Account',
-      icon: 'ti-pin',
-      path: '/account'
-    },
-    {
       name: 'BannedUsers',
       icon: 'ti-na',
       path: '/banned-users'
