@@ -92,7 +92,7 @@
         label="操作人">
       </el-table-column>
       <el-table-column
-        min-width="220"
+        min-width="100"
         align="center"
         label="操作">
         <template scope="scope">
