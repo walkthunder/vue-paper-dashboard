@@ -26,7 +26,7 @@
         <ul class="nav navbar-nav navbar-right">
           <li>
             <a href="#" class="btn-rotate">
-              <el-button class="el-icon-setting" type="text" v-popover:popoverManager>管理员</el-button>
+              <el-button class="el-icon-setting" type="text" v-popover:popoverManager @click="clicker">管理员</el-button>
             </a>
           </li>
         </ul>
@@ -85,10 +85,14 @@
       },
       logout () {
         console.log('logout')
+        this.showManager = false
         this.$removeUser()
         cache.removeItem('token')
         this.$router.push('/login')
         this.$message.success('注销成功')
+      },
+      clicker () {
+        this.refreshInfo()
       }
     }
   }
