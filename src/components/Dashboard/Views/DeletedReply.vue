@@ -85,8 +85,9 @@
         label="删除原因">
       </el-table-column>
       <el-table-column
-        prop="thumb_count"
+        prop="manager_id"
         min-width="110"
+        :formatter="adminMatch"
         align="center"
         label="操作人">
       </el-table-column>
@@ -118,6 +119,7 @@
   import isEmpty from 'lodash/isEmpty'
   import cache from '../../../service/cache'
   import api from '../../../service/data/reply'
+  import accountAPI from '../../../service/data/account'
   export default {
     data () {
       return {
@@ -131,7 +133,8 @@
         manager_id: '',
         token: '',
         date_range: [],
-        list: []
+        list: [],
+        accounts: []
       }
     },
     mounted () {
@@ -173,14 +176,17 @@
           params.begin_time = Math.floor(moment(begin).valueOf() / 1000)
           params.end_time = Math.floor(moment(end).valueOf() / 1000)
         }
-        return api('deleted_reply').fetch(params, {token: this.token})
-          .then(resp => {
-            console.log('response data: ', resp)
+        let token = this.token
+        return Promise.all([api('deleted_reply').fetch(params, {token}), accountAPI('managers').fetch({}, {params: {token}})])
+          .then(([resp, accounts]) => {
             if (resp && resp.data) {
               this.list = resp.data.reply
               this.pageNo = resp.data.page_no
               this.pageSize = resp.data.page_size
               this.total = resp.data.total
+            }
+            if (accounts && accounts.data) {
+              this.accounts = accounts.data.list || []
             }
             this.isLoading = false
           })
@@ -196,10 +202,22 @@
         return ''
       },
       reasonFormat (row, col, val) {
-        if (val && Array.isArray(val)) {
-          return val.join(' ')
+        if (val) {
+          return val.split('_').join(', ')
         }
         return ''
+      },
+      adminMatch (row, col, val) {
+        let accounts = this.accounts
+        if (val && accounts) {
+          for (let i = 0; i < accounts.length; i++) {
+            let cur = accounts[i]
+            if (cur && cur.id === val) {
+              return cur.nickname
+            }
+          }
+        }
+        return `ID: ${val}`
       },
       handleSizeChange (val) {
         console.log(`${val} items per page`)
