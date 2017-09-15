@@ -5,24 +5,9 @@
     <side-bar type="navbar" :sidebar-links="$sidebar.sidebarLinks">
       <ul class="nav navbar-nav">
         <li>
-          <a class="dropdown-toggle" data-toggle="dropdown">
-            <i class="ti-panel"></i>
-            <p>Stats</p>
-          </a>
-        </li>
-        <drop-down title="5 Notifications" icon="ti-bell">
-
-          <li><a>Notification 1</a></li>
-          <li><a>Notification 2</a></li>
-          <li><a>Notification 3</a></li>
-          <li><a>Notification 4</a></li>
-          <li><a>Another notification</a></li>
-
-        </drop-down>
-        <li>
-          <a>
+          <a @click="logout">
             <i class="ti-settings"></i>
-            <p>Settings</p>
+            <p>Logout</p>
           </a>
         </li>
         <li class="divider"></li>
@@ -32,7 +17,18 @@
 </template>
 
 <script>
-  export default {}
+  import cache from './service/cache'
+  export default {
+    methods: {
+      logout () {
+        console.log('logout')
+        this.$removeUser()
+        cache.removeItem('token')
+        this.$router.push('/login')
+        this.$message.success('注销成功')
+      }
+    }
+  }
 </script>
 
 <style lang="scss">

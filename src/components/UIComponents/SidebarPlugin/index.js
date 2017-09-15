@@ -4,11 +4,6 @@ const SidebarStore = {
   showSidebar: false,
   sidebarLinks: [
     {
-      name: 'Login',
-      icon: 'ti-user',
-      path: '/login'
-    },
-    {
       name: 'Accounts',
       icon: 'ti-bar-chart-alt',
       path: '/accounts'
@@ -37,31 +32,6 @@ const SidebarStore = {
       name: 'DeletedReply',
       icon: 'ti-unlink',
       path: '/deleted-reply'
-    },
-    {
-      name: 'Dashboard',
-      icon: 'ti-panel',
-      path: '/overview'
-    },
-    {
-      name: 'Table List',
-      icon: 'ti-view-list-alt',
-      path: '/table-list'
-    },
-    {
-      name: 'Typography',
-      icon: 'ti-text',
-      path: '/typography'
-    },
-    {
-      name: 'Icons',
-      icon: 'ti-pencil-alt2',
-      path: '/icons'
-    },
-    {
-      name: 'Notifications',
-      icon: 'ti-bell',
-      path: '/notifications'
     }
   ],
   displaySidebar (value) {
