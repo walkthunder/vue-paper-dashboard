@@ -154,7 +154,7 @@
         label="支付">
       </el-table-column>
     </el-table>
-    <el-dialog title="删除回复" :visible.sync="isDeleting">
+    <el-dialog title="删除回复" :visible.sync="isDeleting" :modal-append-to-body="false">
       <el-form label-width="120px">
         <el-form-item label="选择删除原因" prop="type">
           <el-checkbox-group v-model="deleteReason">

@@ -105,7 +105,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="回复评论" :visible.sync="isAnswering">
+    <el-dialog title="回复评论" :visible.sync="isAnswering" :modal-append-to-body="false">
       <el-row style="margin-bottom: 20px;">
         <el-col>
           <span :model="answerContent">{{answerContent.user_name}} 回复 {{answerContent.reply_to && answerContent.reply_to.user_name}} : {{answerContent.content}}</span>
@@ -134,7 +134,7 @@
         <el-button type="primary" @click.native.prevent="answer">发布</el-button>
       </el-row>
     </el-dialog>
-    <el-dialog title="删除回复" :visible.sync="isDeleting">
+    <el-dialog title="删除回复" :visible.sync="isDeleting" :modal-append-to-body="false">
       <el-form label-width="120px">
         <el-form-item label="选择删除原因" prop="type">
           <el-checkbox-group v-model="deleteReason">

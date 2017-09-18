@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <el-dialog title="封禁用户" :visible.sync="isBanning">
+    <el-dialog title="封禁用户" :visible.sync="isBanning" :modal-append-to-body="false">
       <el-form label-width="120px">
         <el-form-item label="选择封禁原因" prop="type">
           <el-checkbox-group v-model="bannedReason">
