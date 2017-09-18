@@ -103,7 +103,7 @@
               v-for="manager in managers"
               :key="manager.id"
               :label="manager.nickname"
-              :value="manager.id"></el-option>
+              :value="manager.nickname"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
