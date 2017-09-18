@@ -86,7 +86,7 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="马甲编辑" :visible.sync="dialogFormVisible">
+    <el-dialog title="马甲编辑" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
       <el-form :model="editing">
         <el-form-item label="名称" :label-width="formLabelWidth">
           <el-input v-model="editing.alt_name" auto-complete="off"></el-input>
@@ -328,7 +328,5 @@
   }
 </script>
 <style>
-  .v-modal {
-    z-index: 0 !important;
-  }
+
 </style>
