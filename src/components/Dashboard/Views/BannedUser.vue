@@ -126,11 +126,17 @@
         this.confirmLogged()
         this.token = cache.getItem('token')
         params.manager_id = this.manager_id
-        return api('unban').fetch(params, {token: this.token})
-          .then(resp => {
-            this.$message.success('解禁用户成功')
-            this.fetchData()
-          })
+        return this.$confirm('确定接触用户封禁？', '解封用户', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          return api('unban').fetch(params, {token: this.token})
+            .then(resp => {
+              this.$message.success('解禁用户成功')
+              this.fetchData()
+            })
+        })
       },
       fetchData () {
         this.isLoading = true

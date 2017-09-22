@@ -255,11 +255,18 @@
             reply_id: replyId,
             token: this.token
           }
-          return api('recover_reply').fetch({}, params)
+          return this.$confirm('确定还原？', '还原评论', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
             .then(resp => {
-              console.log('reply recovered: ', resp)
-              this.$message.success('还原操作成功')
-              this.fetchData()
+              return api('recover_reply').fetch({}, params)
+                .then(resp => {
+                  console.log('reply recovered: ', resp)
+                  this.$message.success('还原操作成功')
+                  this.fetchData()
+                })
             })
         }
       }
