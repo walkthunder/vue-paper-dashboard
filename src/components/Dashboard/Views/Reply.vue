@@ -363,7 +363,6 @@
       },
       answerHandler (index, rows) {
         this.confirmManager()
-        this.isAnswering = true
         let content = rows[index]
         this.answerContent = content
         // Get available accounts
@@ -371,6 +370,7 @@
           .then(data => {
             console.log('Available accounts  : ', data)
             this.accounts = data
+            this.isAnswering = true
           })
       },
       deleteHandler (index, rows) {
@@ -401,7 +401,7 @@
           manager_id: this.manager_id,
           user_id: this.useAccountId || this.accounts[0].alt_id,
           topic_id: this.answerContent.topic_id,
-          reply_to: this.answerContent.reply_to.id,
+          reply_to: this.answerContent.reply_to._id,
           content: this.answerText,
           token: this.token
         }
