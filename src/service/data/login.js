@@ -5,7 +5,7 @@ const ENTRIES = {
     method: 'GET',
     host: BACKEND_HOST,
     path: `/api/jwt`,
-    timeout: 300
+    timeout: 1000
   }
 }
 const api = new API(ENTRIES)
