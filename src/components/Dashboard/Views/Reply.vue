@@ -321,7 +321,7 @@
       },
       dataFormat (row, col, val) {
         if (val) {
-          return moment(val * 1000).format('MMMM Do YYYY')
+          return moment(val * 1000).format('L')
         }
         return ''
       },

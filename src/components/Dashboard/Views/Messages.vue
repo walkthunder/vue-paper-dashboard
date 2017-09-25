@@ -55,6 +55,7 @@
         prop="create_time"
         min-width="110"
         align="center"
+        :formatter="dataFormat"
         label="回复时间">
       </el-table-column>
       <el-table-column
@@ -261,6 +262,12 @@
       },
       defaultBool (row, col, val) {
         return val ? '已回复' : '未回复'
+      },
+      dataFormat (row, col, val) {
+        if (val) {
+          return moment(val).format('L')
+        }
+        return ''
       },
       answerHandler (index, rows) {
         this.confirmManager()
