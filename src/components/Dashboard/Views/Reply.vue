@@ -401,7 +401,7 @@
           manager_id: this.manager_id,
           user_id: this.useAccountId || this.accounts[0].alt_id,
           topic_id: this.answerContent.topic_id,
-          reply_to: this.answerContent.reply_to._id,
+          reply_to: this.answerContent._id,
           content: this.answerText,
           token: this.token
         }
