@@ -300,6 +300,11 @@
             this.mContentLoading = false
             let replies = reply.data.reply || []
             this.mTotal = reply.data.total
+            for (let i = 0; i < replies.length; i++) {
+              let rep = replies[i]
+              rep = rep || {}
+              rep.reply_to = rep.reply_to || {}
+            }
             this.contents = replies
             if (!withoutCategory) {
               this.categories = [{
