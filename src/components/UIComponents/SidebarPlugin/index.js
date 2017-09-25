@@ -4,27 +4,27 @@ const SidebarStore = {
   showSidebar: false,
   sidebarLinks: [
     {
-      name: 'Accounts',
+      name: '马甲管理',
       icon: 'ti-bar-chart-alt',
       path: '/accounts'
     },
     {
-      name: 'Reply',
+      name: '回复',
       icon: 'ti-pulse',
       path: '/reply'
     },
     {
-      name: 'BannedUsers',
+      name: '封禁用户',
       icon: 'ti-na',
       path: '/banned-users'
     },
     {
-      name: 'Messages',
+      name: '消息',
       icon: 'ti-email',
       path: '/messages'
     },
     {
-      name: 'DeletedReply',
+      name: '已删除回复',
       icon: 'ti-unlink',
       path: '/deleted-reply'
     }
