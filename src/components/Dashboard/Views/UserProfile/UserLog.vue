@@ -130,7 +130,7 @@
         label="商品ID">
       </el-table-column>
       <el-table-column
-        prop=""
+        prop="name"
         min-width="110"
         align="center"
         label="商品名称">
@@ -215,6 +215,22 @@
           this.$router.push('/login')
         }
       },
+      getShopListDetail (shoplist) {
+        return shoplist.reduce((res, item) => {
+          return res.then((compositeData) => {
+            return accountAPI('shop_item_info').fetch({ 's_T_A_T_I_C': item.entity_id })
+            .then(resp => {
+              if (resp && resp.data) {
+                item.name = resp.data.name
+                compositeData.push(item)
+                console.log('fetch data item: ', resp.data)
+                return compositeData
+              }
+              return compositeData
+            })
+          })
+        }, Promise.resolve([]))
+      },
       fetchData (dataPromise) {
         return dataPromise.then(resp => {
           if (resp) {
@@ -224,7 +240,16 @@
             } else if (this.activeIndex === '2') {
               this.albumReply = resp.data && resp.data.reply
             } else {
-              this.shopLog = resp.data
+              let data = resp.data || []
+              return this.getShopListDetail(data)
+                .then(fullData => {
+                  console.log('final full data', fullData)
+                  this.shopLog = fullData
+                })
+                .catch((err) => {
+                  console.error(err)
+                  this.shopLog = resp.data
+                })
             }
           }
         })

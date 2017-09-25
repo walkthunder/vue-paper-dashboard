@@ -49,6 +49,12 @@ const ENTRIES = {
     path: '/api/v1/subscriptions',
     timeout: 600
   },
+  shop_item_info: {
+    method: 'GET',
+    host: PAY_HOST,
+    path: '/api/v1/purchase_entities/entity_ids',
+    timeout: 600
+  },
   ban: {
     method: 'POST',
     host: U2_HOST,
