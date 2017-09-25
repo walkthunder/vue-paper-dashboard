@@ -97,7 +97,6 @@
       return {
         linkHeight: 60,
         activeLinkIndex: 0,
-
         windowWidth: 0,
         isWindows: false,
         hasAutoHeight: false

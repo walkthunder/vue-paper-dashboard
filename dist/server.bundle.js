@@ -53327,7 +53327,7 @@ function onListening() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var BACKEND_HOST = exports.BACKEND_HOST = 'http://localhost:8011';
+var BACKEND_HOST = exports.BACKEND_HOST = 'http://115.29.5.46:8011';
 var CMS_HOST = exports.CMS_HOST = process.env.CMS_HOST;
 var U2_HOST = exports.U2_HOST = 'https://u2.qingting.fm';
 var U2_HOST_TEST = exports.U2_HOST_TEST = 'http://114.215.242.136:7777';
