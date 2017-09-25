@@ -24,7 +24,7 @@
         console.log('logout')
         this.$removeUser()
         cache.removeItem('token')
-        this.$router.push('/login')
+        this.$router.push({ name: 'login' })
         this.$message.success('注销成功')
       }
     }
