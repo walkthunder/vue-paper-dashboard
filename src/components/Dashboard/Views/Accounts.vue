@@ -183,7 +183,7 @@
         this.isLoading = true
         let manager = this.$getUser()
         if (isEmpty(manager)) {
-          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$localStorage.set('afterLogin', 'accounts')
           this.$router.push('/login')
           return
         }

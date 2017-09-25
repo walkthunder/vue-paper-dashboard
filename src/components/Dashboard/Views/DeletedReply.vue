@@ -152,7 +152,7 @@
       confirmLogged () {
         let manager = this.$getUser()
         if (isEmpty(manager)) {
-          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$localStorage.set('afterLogin', 'deleted-reply')
           this.$router.push('/login')
           return
         }

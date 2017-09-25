@@ -61,7 +61,7 @@
                 message: '登录成功',
                 type: 'success'
               })
-              this.$router.push(`${this.$localStorage.get('afterLogin') || '/'}`)
+              this.$router.push({ name: this.$localStorage.get('afterLogin') || 'messages' })
               this.$localStorage.remove('afterLogin')
             }
           })

@@ -64,7 +64,7 @@
           <el-button
             type="text"
             size="small"
-            @click.native.prevent="gotoAccount(scope.$index, contents)">
+            @click.native.prevent="gotoUserAccount(scope.$index, contents)">
             {{scope.row.user_name}}
           </el-button>
         </template>
@@ -264,7 +264,7 @@
       confirmManager () {
         let manager = this.$getUser()
         if (isEmpty(manager)) {
-          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$localStorage.set('afterLogin', 'reply')
           this.$router.push('/login')
           return
         }
@@ -455,13 +455,9 @@
         this.deleteId = ''
         this.isDeleting = false
       },
-      gotoAccount (index, contents) {
-        console.log('go to account: ', contents[index].user_id)
-        this.$router.push(`/account/${contents[index].user_id}`)
-      },
       gotoUserAccount (index, contents) {
         console.log('go to account: ', contents[index].reply_to)
-        this.$router.push(`/account/${contents[index].reply_to.user_id}`)
+        this.$router.push({ name: 'account', params: { user_id: contents[index].user_id } })
       }
     }
   }
