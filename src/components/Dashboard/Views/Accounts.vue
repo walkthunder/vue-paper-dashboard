@@ -189,6 +189,12 @@
         }
         this.manager_id = manager && manager.id
         let params = {manager_id: this.manager_id}
+        if (this.s_id) {
+          params.alt_id = this.s_id
+        }
+        if (this.s_nick) {
+          params.alt_name = this.s_nick
+        }
         let token = cache.getItem('token')
         let managersPromise = Promise.resolve()
         if (!withoutManagers) {
