@@ -153,7 +153,7 @@
         let manager = this.$getUser()
         if (isEmpty(manager)) {
           this.$localStorage.set('afterLogin', 'deleted-reply')
-          this.$router.push('/login')
+          this.$router.push({ name: 'login' })
           return
         }
         this.manager_id = manager.id
