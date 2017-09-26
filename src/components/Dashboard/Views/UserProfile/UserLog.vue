@@ -142,7 +142,7 @@
         label="支付方式">
       </el-table-column>
       <el-table-column
-        prop=""
+        prop="originalFee"
         min-width="110"
         align="center"
         label="原价">
@@ -218,14 +218,19 @@
       getShopListDetail (shoplist) {
         return shoplist.reduce((res, item) => {
           return res.then((compositeData) => {
-            return accountAPI('shop_item_info').fetch({ 's_T_A_T_I_C': item.entity_id })
-            .then(resp => {
+            let itemPromise = accountAPI('shop_item_info').fetch({ 's_T_A_T_I_C': item.entity_id })
+            let payPromise = accountAPI('shop_item_info').fetch({ 's_T_A_T_I_C': [item.entity_id, 'item'] })
+            return Promise.all([itemPromise, payPromise])
+            .then(([resp, resp2]) => {
               if (resp && resp.data) {
                 item.name = resp.data.name
-                compositeData.push(item)
-                console.log('fetch data item: ', resp.data)
-                return compositeData
               }
+              if (resp2 && resp2.data) {
+                item.originalFee = resp2.data.item.original_fee
+                item.fee = resp2.data.item.fee
+              }
+              compositeData.push(item)
+              console.log('fetch data item: ', item)
               return compositeData
             })
           })
