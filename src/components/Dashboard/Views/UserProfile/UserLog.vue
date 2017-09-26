@@ -211,7 +211,7 @@
       confirmLogged () {
         this.manager_id = this.$getUser().id
         if (!this.manager_id) {
-          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$localStorage.set('afterLogin', 'accounts')
           this.$router.push({ name: 'login' })
         }
       },
@@ -302,7 +302,7 @@
         this.isDeleting = true
         this.manager_id = this.$getUser().id
         if (!this.manager_id) {
-          this.$localStorage.set('afterLogin', this.$route.fullPath)
+          this.$localStorage.set('afterLogin', 'accounts')
           this.$router.push({ name: 'login' })
         }
       },
