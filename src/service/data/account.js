@@ -43,7 +43,7 @@ const ENTRIES = {
     path: '/u2/api/v4/user',
     timeout: 300
   },
-  shop_list: {
+  owner_list: {
     method: 'GET',
     host: PAY_HOST,
     path: '/api/v1/subscriptions',
@@ -77,6 +77,12 @@ const ENTRIES = {
     method: 'GET',
     host: U2_HOST,
     path: '/api/v2/internal/manager_msg',
+    timeout: 300
+  },
+  shop_list: {
+    method: 'GET',
+    host: BACKEND_HOST,
+    path: '/api/orderlist',
     timeout: 300
   }
 }

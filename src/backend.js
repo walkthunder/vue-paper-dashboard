@@ -12,7 +12,9 @@ import { Strategy, ExtractJwt } from 'passport-jwt'
 import { CMS_HOST, DAL_HOST } from './config'
 import crypto from 'crypto'
 import { Buffer } from 'safe-buffer'
-
+import moment from 'moment'
+import md5 from 'blueimp-md5'
+const bkendKey = process.env.ENDKEY
 // Author defined params
 const SECRET = process.env.SECRET || 'qt-saying'
 
@@ -127,6 +129,37 @@ router.get('/categories', (req, res) => {
       res.status(200).json(JSON.parse(body))
     }
   })
+})
+
+router.get('/orderlist', (req, res) => {
+  if (req.query && req.query.userId) {
+    let userId = req.query.userId
+    const dtstr = moment().format('YYYYMMDDHHmmss')
+    const qtpSig = dtstr + '|' + md5(`${dtstr}|${bkendKey}`)
+    console.log('bkendKey: ', bkendKey, dtstr, `${dtstr}|${bkendKey}`, qtpSig)
+    let options = {
+      method: 'GET',
+      url: `https://adminpay.qingting.fm/api/admin/order?_page=1&_perPage=20&_sortDir=DESC&_sortField=_id&state=success&user_id=${userId}`,
+      headers: {
+        'qtp-sig': qtpSig
+      }
+    }
+    console.log('debug options: ', options)
+    let callback = (error, response, body) => {
+      console.log('error: ', error, response.statusCode)
+      console.log('body: ', body)
+      if (!error && response.statusCode === 200) {
+        var info = JSON.parse(body)
+        console.log('qtp backend result: ', info)
+        res.status(200).json({ data: info, errorno: 0 })
+      } else {
+        res.status(500).end('pay server connection error', error)
+      }
+    }
+    request(options, callback)
+  } else {
+    res.status(400).end()
+  }
 })
 
 export default router
