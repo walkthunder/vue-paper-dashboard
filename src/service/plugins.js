@@ -1,3 +1,4 @@
+import cache from './cache'
 const MyPlugin = {}
 MyPlugin.install = function (Vue, options) {
   // Add user property
@@ -5,15 +6,15 @@ MyPlugin.install = function (Vue, options) {
   // get user
   Vue.prototype.$getUser = function () {
     console.log('getUser info: ', Vue.user)
-    return Vue.user
+    return cache.getItem('user')
   }
   // update user
   Vue.prototype.$updateUser = function (userInfo) {
     console.log('set user info: ', userInfo)
-    Vue.user = userInfo
+    cache.setItem('user', userInfo)
   }
   Vue.prototype.$removeUser = function () {
-    Vue.user = {}
+    cache.removeItem('user')
   }
 }
 export default MyPlugin
