@@ -212,7 +212,7 @@
         this.manager_id = this.$getUser().id
         if (!this.manager_id) {
           this.$localStorage.set('afterLogin', this.$route.fullPath)
-          this.$router.push('/login')
+          this.$router.push({ name: 'login' })
         }
       },
       getShopListDetail (shoplist) {
@@ -303,7 +303,7 @@
         this.manager_id = this.$getUser().id
         if (!this.manager_id) {
           this.$localStorage.set('afterLogin', this.$route.fullPath)
-          this.$router.push('/login')
+          this.$router.push({ name: 'login' })
         }
       },
       doDel () {
