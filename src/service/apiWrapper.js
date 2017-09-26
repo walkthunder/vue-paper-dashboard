@@ -21,7 +21,13 @@ function formatString (str, tags) {
   for (let attr in tags) {
     if (tags.hasOwnProperty(attr)) {
       if (attr === 's_T_A_T_I_C') {
-        query = `/${encodeURIComponent(tags[attr])}${query}`
+        let staticStr
+        if (tags[attr].map) {
+          staticStr = tags[attr].map(val => encodeURIComponent(val)).join('/')
+        } else {
+          staticStr = encodeURIComponent(tags[attr])
+        }
+        query = `/${staticStr}${query}`
       } else {
         query += `${encodeURIComponent(attr)}=${encodeURIComponent(tags[attr])}&`
       }
