@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/community/admin/',
     component: DashboardLayout,
-    redirect: '/messages',
+    redirect: { name: 'messages' },
     children: [
       {
         path: 'login',
