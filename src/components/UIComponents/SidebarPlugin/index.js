@@ -9,7 +9,7 @@ const SidebarStore = {
       path: 'accounts'
     },
     {
-      name: '回复',
+      name: '用户评论',
       icon: 'ti-pulse',
       path: 'reply'
     },
@@ -19,7 +19,7 @@ const SidebarStore = {
       path: 'banned-users'
     },
     {
-      name: '消息',
+      name: '我的消息',
       icon: 'ti-email',
       path: 'messages'
     },
