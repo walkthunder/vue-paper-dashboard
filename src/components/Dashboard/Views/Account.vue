@@ -27,6 +27,7 @@
   </div>
 </template>
 <script>
+  import isEmpty from 'lodash/isEmpty'
   import EditProfileForm from './UserProfile/EditProfileForm.vue'
   import UserCard from './UserProfile/UserCard.vue'
   import UserLog from './UserProfile/UserLog.vue'
@@ -65,6 +66,12 @@
     },
     methods: {
       fetchData () {
+        let manager = this.$getUser()
+        if (isEmpty(manager)) {
+          this.$localStorage.set('afterLogin', 'accounts')
+          this.$router.push({ name: 'login' })
+          return
+        }
         let tags = { 's_T_A_T_I_C': this.userid }
         let token = cache.getItem('token')
         api('account').fetch(tags, {token})

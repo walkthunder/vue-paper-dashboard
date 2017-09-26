@@ -117,7 +117,7 @@
         let manager = this.$getUser()
         if (isEmpty(manager)) {
           this.$localStorage.set('afterLogin', 'accounts')
-          this.$router.push('/login')
+          this.$router.push({ name: 'login' })
           return
         }
         let token = cache.getItem('token')
