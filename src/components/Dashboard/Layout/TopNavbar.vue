@@ -44,8 +44,17 @@
       ElPopover},
     computed: {
       routeName () {
+        const titleMap = {
+          login: '登录',
+          reply: '用户评论列表',
+          accounts: '马甲列表',
+          account: '用户信息',
+          'banned-users': '被封禁用户列表',
+          messages: '管理员消息列表',
+          'deleted-reply': '已删除评论'
+        }
         const {name} = this.$route
-        return this.capitalizeFirstLetter(name)
+        return titleMap[name] || this.capitalizeFirstLetter(name)
       }
     },
     watch: {
