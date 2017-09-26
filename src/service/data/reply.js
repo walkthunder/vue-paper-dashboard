@@ -11,7 +11,7 @@ const ENTRIES = {
     method: 'GET',
     host: U2_HOST,
     path: `/api/v2/internal/reply`,
-    timeout: 1000
+    timeout: 3000
   },
   answer: {
     method: 'POST',

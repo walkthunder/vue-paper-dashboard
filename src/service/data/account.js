@@ -29,7 +29,7 @@ const ENTRIES = {
     method: 'GET',
     host: BACKEND_HOST,
     path: '/api/upyun_token',
-    timeout: 300
+    timeout: 1000
   },
   random: {
     method: 'GET',
@@ -47,13 +47,13 @@ const ENTRIES = {
     method: 'GET',
     host: PAY_HOST,
     path: '/api/v1/subscriptions',
-    timeout: 600
+    timeout: 900
   },
   shop_item_info: {
     method: 'GET',
     host: PAY_HOST,
     path: '/api/v1/purchase_entities/entity_ids',
-    timeout: 600
+    timeout: 900
   },
   ban: {
     method: 'POST',
