@@ -6,7 +6,7 @@
         placement="top"
         width="220"
         v-model="showManager">
-        <p class="info-header">Manager Info</p>
+        <p class="info-header">管理员信息</p>
         <p><span class="info-key">ID:</span><span class="info-val">{{this.userId}}</span></p>
         <p><span class="info-key">NAME:</span><span class="info-val">{{this.userName}}</span></p>
         <div style="text-align: center; margin: 0">

@@ -7,7 +7,7 @@
         <li>
           <a @click="logout">
             <i class="ti-settings"></i>
-            <p>Logout</p>
+            <p>注销</p>
           </a>
         </li>
         <li class="divider"></li>

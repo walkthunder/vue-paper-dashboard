@@ -11,7 +11,7 @@
             <div class="logo-img">
                 <img src="/static/img/vue-logo.png" alt="">
             </div>
-          Dashboard
+          功能选项
         </a>
       </div>
       <slot>
