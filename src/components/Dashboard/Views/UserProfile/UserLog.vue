@@ -118,7 +118,7 @@
         label="支付时间">
       </el-table-column>
       <el-table-column
-        prop="entity_id"
+        prop="_purchase_item.channel_id"
         min-width="110"
         align="center"
         label="专辑ID">
@@ -130,25 +130,25 @@
         label="商品ID">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="_purchase_item.name"
         min-width="110"
         align="center"
         label="商品名称">
       </el-table-column>
       <el-table-column
-        prop=""
+        prop="vendor"
         min-width="110"
         align="center"
         label="支付方式">
       </el-table-column>
       <el-table-column
-        prop="originalFee"
+        prop="_purchase_item.original_fee"
         min-width="110"
         align="center"
         label="原价">
       </el-table-column>
       <el-table-column
-        prop="fee"
+        prop="actual_fee"
         min-width="110"
         align="center"
         label="支付">
@@ -215,27 +215,6 @@
           this.$router.push({ name: 'login' })
         }
       },
-      getShopListDetail (shoplist) {
-        return shoplist.reduce((res, item) => {
-          return res.then((compositeData) => {
-            let itemPromise = accountAPI('shop_item_info').fetch({ 's_T_A_T_I_C': item.entity_id })
-            let payPromise = accountAPI('shop_item_info').fetch({ 's_T_A_T_I_C': [item.entity_id, 'item'] })
-            return Promise.all([itemPromise, payPromise])
-            .then(([resp, resp2]) => {
-              if (resp && resp.data) {
-                item.name = resp.data.name
-              }
-              if (resp2 && resp2.data) {
-                item.originalFee = resp2.data.item.original_fee
-                item.fee = resp2.data.item.fee
-              }
-              compositeData.push(item)
-              console.log('fetch data item: ', item)
-              return compositeData
-            })
-          })
-        }, Promise.resolve([]))
-      },
       fetchData (dataPromise) {
         return dataPromise.then(resp => {
           if (resp) {
@@ -246,22 +225,15 @@
               this.albumReply = resp.data && resp.data.reply
             } else {
               let data = resp.data || []
-              return this.getShopListDetail(data)
-                .then(fullData => {
-                  console.log('final full data', fullData)
-                  this.shopLog = fullData
-                })
-                .catch((err) => {
-                  console.error(err)
-                  this.shopLog = resp.data
-                })
+              console.log('client get shop list: ', data)
+              this.shopLog = data
             }
           }
         })
-          .catch(err => {
-            console.error(err)
-            this.isLoading = false
-          })
+        .catch(err => {
+          console.error(err)
+          this.isLoading = false
+        })
       },
       selectHandler (key, path) {
         this.confirmLogged()
@@ -287,7 +259,7 @@
           dataPromise = api('reply').fetch(params, {token})
         } else {
           // Shop history
-          dataPromise = accountAPI('shop_list').fetch({ user_id: this.userId }, {token})
+          dataPromise = accountAPI('shop_list').fetch({ userId: this.userId }, {token})
         }
         return this.fetchData(dataPromise)
       },

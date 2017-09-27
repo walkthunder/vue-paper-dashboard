@@ -14,7 +14,7 @@ import crypto from 'crypto'
 import { Buffer } from 'safe-buffer'
 import moment from 'moment'
 import md5 from 'blueimp-md5'
-const bkendKey = process.env.ENDKEY || '39eeb538d3212ffc818cf14ae726b772'
+const bkendKey = process.env.ENDKEY
 // Author defined params
 const SECRET = process.env.SECRET || 'qt-saying'
 
@@ -149,10 +149,9 @@ router.get('/orderlist', (req, res) => {
       console.log('error: ', error, response.statusCode)
       console.log('body: ', body)
       if (!error && response.statusCode === 200) {
-        console.log('result from backend: ', body)
         var info = JSON.parse(body)
         console.log('qtp backend result: ', info)
-        res.status(200).json(JSON.parse(info))
+        res.status(200).json({ data: info, errorno: 0 })
       } else {
         res.status(500).end('pay server connection error', error)
       }
