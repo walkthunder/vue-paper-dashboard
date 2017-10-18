@@ -284,13 +284,12 @@
             this.editing.ownerIds = this.editing.owners.map(owner => this._matchManagerIdWithName(owner))
           }
         } else {
-          this.editing = { owners: [] } // To skip an element bug TODO: Fix element bug
+          this.editing = { owners: [this.$getUser().name], ownerIds: [this.manager_id] } // To skip an element bug TODO: Fix element bug
         }
         this.editNotNewMode = !target.dataset.new
         this.dialogFormVisible = true
       },
       onSelect (val) {
-        console.log('sync managers: ', val)
         if (this.editing && this.editing.owners) {
           this.editing.ownerIds = this.editing.owners.map(owner => this._matchManagerIdWithName(owner))
         }
