@@ -2,7 +2,7 @@
   <div>
     <div>
       <qt-img
-        :src="url || value"
+        :src="url || urlStr"
         postfix=""
         :width="picW"
         :height="picH">
@@ -43,7 +43,6 @@ export default {
     height: {
       default: 800
     },
-    value: String,
     url: String,
     text: String
   },
@@ -53,6 +52,7 @@ export default {
       status: 0,
       isUploading: false,
       isError: false,
+      urlStr: '',
       options: {
         url: '//v0.api.upyun.com/qingting-pic',
         formData: {
@@ -163,7 +163,7 @@ export default {
     },
     updateURL (url) {
       this.$refs.file.value = ''
-      this.value = url
+      this.urlStr = url
       this.$emit('updateURL', url)
       this.$emit('input', url)
     },
