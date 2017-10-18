@@ -87,17 +87,17 @@
       </el-pagination>
     </div>
     <el-dialog title="马甲编辑" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
-      <el-form :model="editing">
-        <el-form-item label="名称" :label-width="formLabelWidth">
+      <el-form :model="editing" :key="editing.alt_id" ref="editor" :rules="rules">
+        <el-form-item label="名称" :label-width="formLabelWidth" prop="alt_name">
           <el-input v-model="editing.alt_name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="头像" :label-width="formLabelWidth">
-          <pic-upload :width="160" :height="'auto'" :needCheckSize="false" v-on:updateURL="updateURL" :url="editing.alt_avatar"></pic-upload>
+        <el-form-item label="头像" :label-width="formLabelWidth" prop="alt_avatar">
+          <pic-upload :key="editing.alt_avatar" :width="160" :height="'auto'" :needCheckSize="false" v-on:updateURL="updateURL" :url="editing.alt_avatar"></pic-upload>
         </el-form-item>
-        <el-form-item label="是否官方" :label-width="formLabelWidth">
+        <el-form-item label="是否官方" :label-width="formLabelWidth" prop="official">
           <el-checkbox v-model="editing.official"></el-checkbox>
         </el-form-item>
-        <el-form-item label="所属小编" :label-width="formLabelWidth">
+        <el-form-item label="所属小编" :label-width="formLabelWidth" prop="owners">
           <el-select v-model="editing.owners" multiple clearable placeholder="Select" @change="onSelect">
             <el-option
               v-for="manager in managers"
@@ -133,6 +133,13 @@
     },
     props: ['user'],
     data () {
+      let validateAva = (rule, value, cb) => {
+        if (this.editing && this.editing.alt_avatar) {
+          cb()
+        } else {
+          cb(new Error('头像不可为空'))
+        }
+      }
       return {
         s_id: '', // search alt_id
         s_nick: '', // search param alt_name
@@ -157,6 +164,10 @@
         /* eslint-disable */
         managers: [],
         /* eslint-enable */
+        rules: {
+          alt_name: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+          alt_avatar: [{ validator: validateAva, trigger: 'blur' }]
+        }
       }
     },
     mounted () {
@@ -295,39 +306,49 @@
         }
       },
       confirmHandler (e) {
-        let token = cache.getItem('token')
-        let params = { ...this.editing, manager_id: this.manager_id, token }
-        if (params.ownerIds) {
-          params.owners = params.ownerIds.join('_')
-        }
-        let requestPromise
-        if (!this.editNotNewMode) { // New account
-          delete (params.alt_id)
-          requestPromise = api('post_account').fetch({}, { ...params })
-        } else { // Edit mode
-          requestPromise = api('update_account').fetch({}, { ...params })
-        }
-        requestPromise
-          .catch(err => {
-            console.error(err)
-            this.$message.error('编辑上传失败，请稍后重试')
-            return false
-          })
-          .then(resp => {
-            if (resp && resp.data) {
-              // Update success, reload the list
-              if (this.editNotNewMode) {
-                this.mergeAltAccountToCurList(this.editing)
-              } else {
-                this.fetchData(true)
-              }
-              this.$message.success('修改成功')
-            } else {
-              this.$message.error('编辑上传失败，请稍后重试')
+        let me = this
+        me.$refs.editor.validate((valid) => {
+          console.log('form valid')
+          if (valid) {
+            let token = cache.getItem('token')
+            let params = { ...this.editing, manager_id: this.manager_id, token }
+            if (params.ownerIds) {
+              params.owners = params.ownerIds.join('_')
             }
-            return resp
-          })
-        this.dialogFormVisible = false
+            let requestPromise
+            if (!this.editNotNewMode) { // New account
+              delete (params.alt_id)
+              requestPromise = api('post_account').fetch({}, { ...params })
+            } else { // Edit mode
+              requestPromise = api('update_account').fetch({}, { ...params })
+            }
+            requestPromise
+              .catch(err => {
+                console.error(err)
+                this.$message.error('编辑上传失败，请稍后重试')
+                return false
+              })
+              .then(resp => {
+                if (resp && resp.data) {
+                  // Update success, reload the list
+                  if (this.editNotNewMode) {
+                    this.mergeAltAccountToCurList(this.editing)
+                  } else {
+                    this.fetchData(true)
+                  }
+                  this.$message.success('修改成功')
+                  me.refs.editor.resetFields()
+                } else {
+                  this.$message.error('编辑上传失败，请稍后重试')
+                }
+                return resp
+              })
+            this.dialogFormVisible = false
+          } else {
+            // Cannot submit
+            console.log('Invalid data field')
+          }
+        })
       }
     }
   }
