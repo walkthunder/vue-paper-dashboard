@@ -51,6 +51,11 @@ const routes = [
         path: 'deleted-reply',
         name: 'deleted-reply',
         component: DeletedReply
+      },
+      {
+        path: '*',
+        name: 'not-found',
+        component: NotFound
       }
     ]
   },
