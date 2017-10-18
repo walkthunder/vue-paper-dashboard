@@ -4,7 +4,7 @@
       <span class="tab"
             v-for="category in categories"
             @click="selectCategory(category)"
-            :class="{'is-active': category.id == $route.params.category_id}">
+            :class="[tab, {'is-active': category.id == mCategoryId}]">
         {{category.name}}
         <small v-if="category.status != 99" style="text-decoration: underline">(下线)</small>
       </span>
@@ -75,6 +75,18 @@
         min-width="110"
         align="center"
         label="回复时间">
+      </el-table-column>
+      <el-table-column
+        prop="album_id"
+        min-width="110"
+        align="center"
+        label="专辑ID">
+      </el-table-column>
+      <el-table-column
+        prop="album_name"
+        min-width="220"
+        align="center"
+        label="专辑名称">
       </el-table-column>
       <el-table-column
         prop="program_name"
@@ -321,7 +333,7 @@
       },
       dataFormat (row, col, val) {
         if (val) {
-          return moment(val * 1000).format('L')
+          return moment(val * 1000).format('YYYY-MM-DD hh:mm:ss')
         }
         return ''
       },
@@ -464,35 +476,6 @@
 </script>
 
 <style scoped>
-  .tags {
-    font-size: 12px;
-    padding: 2px 5px;
-  }
-  .tags:not(:first-child) {
-    border-top: 1px solid #eee;
-  }
-  .tag,.tag-title {
-    color: #555;
-    cursor: pointer;
-    padding: 3px 10px;
-    margin: 5px;
-    display: inline-block;
-  }
-  .tag-title {
-    font-weight: 800;
-    color: #333;
-    cursor: default;
-  }
-  .tag-title:after {
-    content: ':';
-  }
-  .tag:hover {
-    color: #20a0ff;
-  }
-  .tag.is-active {
-    background: #4db3ff;
-    color: #fff;
-  }
   dt {
     width:110px;
     padding-top: 8px;
