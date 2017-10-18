@@ -27,6 +27,18 @@
         label="回复时间">
       </el-table-column>
       <el-table-column
+        prop="album_id"
+        min-width="110"
+        align="center"
+        label="专辑ID">
+      </el-table-column>
+      <el-table-column
+        prop="album_name"
+        min-width="110"
+        align="center"
+        label="专辑名称">
+      </el-table-column>
+      <el-table-column
         prop="program_name"
         min-width="110"
         align="center"
@@ -264,7 +276,7 @@
         return this.fetchData(dataPromise)
       },
       timeFormat (row, col, val) {
-        return moment(parseInt(val, 10) * 1000).format('MMMM Do YYYY, h:mm:ss a').toString()
+        return moment(parseInt(val, 10) * 1000).format('YYYY-MM-DD hh:mm:ss').toString()
       },
       defaultNum (row, col, val) {
         return val || 0
