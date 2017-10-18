@@ -147,9 +147,9 @@ export default {
       this.checkSize(file).then(() => {
         this.isUploading = true
         this.submit()
-      }).catch((value) => {
-        console.log(value)
-        this.$message.error(value)
+      }).catch((err) => {
+        console.log(err)
+        this.$message.error(err)
       })
     },
     submit () {
@@ -163,6 +163,7 @@ export default {
     },
     updateURL (url) {
       this.$refs.file.value = ''
+      this.value = url
       this.$emit('updateURL', url)
       this.$emit('input', url)
     },
