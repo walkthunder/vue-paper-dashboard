@@ -47,9 +47,10 @@
     watch: {
       '$route': 'fetchData'
     },
+    props: ['id'],
     data () {
       return {
-        userid: this.$route.params.user_id || 'da4b9295b661ded7f127b71c5b8da1c6', // Mock data
+        userid: this.id || this.$route.params.user_id || 'da4b9295b661ded7f127b71c5b8da1c6', // Mock data
         username: '',
         description: '',
         avatar: '',
