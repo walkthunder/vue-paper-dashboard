@@ -5,7 +5,6 @@ import winston from 'winston'
 import { json, urlencoded } from 'body-parser'
 import cookieParser from 'cookie-parser'
 import api from './backend'
-import u2 from './u2'
 
 var app = express()
 
@@ -28,7 +27,6 @@ app.use(function (req, res, next) {
 })
 
 app.use('/api', api)
-app.use('/u2', u2)
 
 // serve pure static assets
 app.use(express.static(__dirname))
